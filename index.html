@@ -15,6 +15,17 @@
    text-decoration:none">
   📊 Izveštaji i analitika
 </a>
+<a href="./kartice-igraca.html"
+   style="display:inline-block;
+   padding:11px 15px;
+   border-radius:10px;
+   background:#4b9eff;
+   color:#081729;
+   font-weight:800;
+   text-decoration:none">
+  🏀 Kartice igrača
+</a>
+
 <button id="signOut" class="secondary">Odjavi se</button></div><nav class="nav" id="nav"></nav><div id="notice" class="status hidden" role="status"></div><div id="content"></div><p class="foot">OKK Novi Pazar · Pristup ograničen pravilima baze podataka (RLS). Ne unositi osetljive dokumente dok se bezbednost ne proveri.</p></section></div>
 <dialog id="editor"><h2 id="editorTitle">Novi unos</h2><form id="entryForm"><div id="formFields" class="formgrid"></div><div class="row"><button type="button" class="secondary" id="cancel">Otkaži</button><button type="submit" id="save">Sačuvaj</button></div></form></dialog>
 <dialog id="debtDialog"><h2>Novo dugovanje</h2><form id="debtForm"><label>Poverilac (igrač, trener, dobavljač...)</label><input name="poverilac" required maxlength="150"><label>Sezona</label><select name="sezona" id="debtSeason"><option>2026/27</option><option>2025/26</option><option>2024/25</option><option>2023/24</option><option>Starija dugovanja</option></select><label>Osnov duga</label><select name="osnov"><option>Plata / honorar</option><option>Prevoz</option><option>Smeštaj</option><option>Oprema</option><option>Pozajmica</option><option>Ostalo</option></select><label>Početni dug (RSD)</label><input name="pocetni_dug" type="number" min="0.01" step="0.01" required><label>Napomena</label><input name="napomena"><p class="help">Početni iznos se ne prepisuje. Unesite dug koji nije ranije zaveden u ovoj evidenciji.</p><div class="row"><button type="button" class="secondary" data-close="debtDialog">Otkaži</button><button type="submit">Sačuvaj dug</button></div></form></dialog>
