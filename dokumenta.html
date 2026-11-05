@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="sr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>OKK Novi Pazar · Dokumentacija V4.2</title>
+<style>
+:root{color-scheme:dark;--bg:#081729;--panel:#11243e;--border:#2a4769;--muted:#a9bdd3;--text:#f2f8ff;--accent:#4b9eff}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:15px system-ui,Segoe UI,Arial}
+header{padding:20px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;border-bottom:1px solid var(--border)}header a,a{color:#90c5ff}
+main{max-width:950px;margin:auto;padding:18px 16px 90px}.panel{background:var(--panel);border:1px solid var(--border);border-radius:13px;margin:15px 0;padding:18px}
+h1{font-size:24px}h2{font-size:19px}p,.muted{color:var(--muted)}label{display:block;font-weight:600;font-size:13px;margin:10px 0 6px}
+input,select,textarea{width:100%;background:#081729;color:white;border:1px solid #56708c;border-radius:8px;font:inherit;padding:11px}
+textarea{min-height:70px}button{background:var(--accent);color:#081729;border:none;border-radius:9px;padding:11px 15px;font:inherit;font-weight:700;cursor:pointer}
+button:disabled{opacity:.6;cursor:wait}.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.wide{grid-column:1/-1}
+.error{color:#ff9cad}.file{padding:12px 0;border-bottom:1px solid #37506b;display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap}
+.file small{color:var(--muted)}.file-actions{display:flex;gap:8px;flex-wrap:wrap}.danger{background:#a83a50;color:white}#status{white-space:pre-wrap}
+@media(max-width:620px){.grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header><div><strong>◈ OKK NOVI PAZAR</strong><div class="muted">BLAGAJNA · RAČUNI I FAKTURE · V4.2</div></div><a href="./blagajna.html">← Nazad u blagajnu</a></header>
+<main>
+<h1>Priloži račun ili fakturu</h1>
+<p>Dokument se čuva privatno i povezuje sa postojećom stavkom. Dodavanje i brisanje dokumenta ne menja prihode, rashode ni stanje blagajne.</p>
+<div class="panel" id="status" role="status">Učitavanje...</div>
+<div id="app" hidden>
+<section class="panel"><h2>Dodaj dokument</h2>
+<form id="uploadForm" class="grid">
+<div><label for="table">Poveži sa</label><select id="table"><option value="blagajna">Blagajničkom stavkom</option><option value="finansije">Finansijskom stavkom</option></select></div>
+<div><label for="record">Izaberi postojeću stavku</label><select id="record" required></select></div>
+<div class="wide"><label for="file">Fotografija računa ili PDF (do 10 MB)</label><input id="file" type="file" accept="image/jpeg,image/png,image/webp,application/pdf" required></div>
+<div class="wide"><label for="desc">Opis / broj fakture (opciono)</label><textarea id="desc" maxlength="500" placeholder="Npr. Račun za gorivo, broj fakture..."></textarea></div>
+<div class="wide"><button id="submit" type="submit">📎 Priloži dokument</button></div>
+</form><p class="muted">Dozvoljeno: JPG, PNG, WEBP i PDF. Maksimalno 10 MB po dokumentu.</p></section>
+<section class="panel"><h2>Prilozi uz izabranu stavku</h2><div id="docs" class="muted">Izaberi stavku.</div></section>
+</div>
+</main>
+<script type="module">
+import {createClient} from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
+const db=createClient('https://ysqdigsexbnssqmngyoe.supabase.co','sb_publishable_a8A4BStDplZrHyzxvJBtSw_pJCxk4s3');
+const $=q=>document.querySelector(q);
+const safe=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const formatAmount=v=>Number(v||0).toLocaleString('sr-RS',{maximumFractionDigits:2})+' RSD';
+let rows={blagajna:[],finansije:[]};let docRows=[];let viewRequest=0;
+function notice(msg,error=false){$('#status').textContent=msg;$('#status').classList.toggle('error',error)}
+async function readAll(table){const out=[];for(let i=0;i<100000;i+=1000){const {data,error}=await db.from(table).select('*').order('id',{ascending:false}).range(i,i+999);if(error)throw Error(table+': '+error.message);out.push(...data);if(data.length<1000)return out}throw Error('Previše zapisa')}
+function renderSelect(){const type=$('#table').value,list=rows[type];$('#record').innerHTML=list.map(r=>'<option value="'+safe(r.id)+'">#'+safe(r.id)+' · '+safe(String(r.datum||'').slice(0,10))+' · '+safe(r.opis)+' · '+formatAmount(r.iznos)+'</option>').join('');$('#submit').disabled=!list.length;renderDocs()}
+async function renderDocs(){const request=++viewRequest,type=$('#table').value,id=Number($('#record').value),view=$('#docs');view.textContent='Učitavanje priloga...';docRows=[];if(!id){view.textContent='Nema stavki za izbor.';return}try{const key=type==='blagajna'?'blagajna_id':'finansije_id';const {data,error}=await db.from('dokumenta_prilozi').select('*').eq(key,id).order('datum_dodavanja',{ascending:false});if(error)throw error;if(request!==viewRequest)return;docRows=data||[];view.innerHTML=docRows.length?docRows.map(d=>'<div class="file"><div><b>'+safe(d.naziv_fajla)+'</b><div><small>'+safe(d.opis||'Bez opisa')+' · '+safe(String(d.datum_dodavanja||'').slice(0,10))+'</small></div></div><div class="file-actions"><button type="button" data-view="'+safe(d.id)+'">Otvori</button><button type="button" class="danger" data-delete-doc="'+safe(d.id)+'">Obriši</button></div></div>').join(''):'Nema priloženih dokumenata.'}catch(e){if(request===viewRequest)view.textContent='Greška: '+e.message}}
+$('#table').addEventListener('change',renderSelect);$('#record').addEventListener('change',renderDocs);
+$('#docs').addEventListener('click',async e=>{const btn=e.target.closest('[data-view]');if(!btn)return;const row=docRows.find(d=>d.id===Number(btn.dataset.view));if(!row)return;btn.disabled=true;try{const {data,error}=await db.storage.from('okk-dokumenta').createSignedUrl(row.putanja,60);if(error)throw error;window.open(data.signedUrl,'_blank','noopener,noreferrer')}catch(err){notice('Ne mogu da otvorim dokument: '+err.message,true)}finally{btn.disabled=false}});
+$('#docs').addEventListener('click',async e=>{
+ const btn=e.target.closest('[data-delete-doc]');if(!btn)return;
+ const row=docRows.find(d=>d.id===Number(btn.dataset.deleteDoc));if(!row)return;
+ if(!confirm('Trajno obrisati dokument "'+row.naziv_fajla+'"?\n\nPostojeća uplata ili rashod ostaju sačuvani.'))return;
+ btn.disabled=true;notice('Brisanje dokumenta...');
+ try{
+  const {error:storageError}=await db.storage.from('okk-dokumenta').remove([row.putanja]);
+  if(storageError)throw storageError;
+  const {data,error:dbError}=await db.from('dokumenta_prilozi').delete().eq('id',row.id).select('id');
+  if(dbError)throw dbError;
+  if(!data?.length)throw Error('Fajl je uklonjen, ali brisanje zapisa u bazi nije potvrđeno. Proveri evidenciju.');
+  notice('Dokument je obrisan. Povezana finansijska stavka nije menjana.');await renderDocs();
+ }catch(err){notice('Brisanje nije završeno: '+err.message+'. Proveri da li dokument još postoji.',true);await renderDocs()}
+ finally{btn.disabled=false}
+});
+$('#uploadForm').addEventListener('submit',async e=>{
+ e.preventDefault();const file=$('#file').files[0],type=$('#table').value,id=Number($('#record').value),btn=$('#submit');if(!file||!id)return;
+ const valid=['application/pdf','image/jpeg','image/png','image/webp'];if(!valid.includes(file.type)){notice('Dozvoljeni su samo PDF, JPG, PNG i WEBP.',true);return}
+ if(file.size>10*1024*1024){notice('Dokument je veći od 10 MB.',true);return}
+ btn.disabled=true;let stored=null;
+ try{
+  const key=type==='blagajna'?'blagajna_id':'finansije_id';const ext=({'application/pdf':'pdf','image/jpeg':'jpg','image/png':'png','image/webp':'webp'})[file.type];
+  const path=type+'/'+id+'/'+crypto.randomUUID()+'.'+ext;
+  const {error:upErr}=await db.storage.from('okk-dokumenta').upload(path,file,{contentType:file.type,upsert:false});if(upErr)throw upErr;stored=path;
+  const record={[key]:id,naziv_fajla:file.name,putanja:path,tip_fajla:file.type,velicina:file.size,opis:$('#desc').value.trim()||null};
+  const {error:dbErr}=await db.from('dokumenta_prilozi').insert(record);if(dbErr)throw dbErr;
+  stored=null;$('#file').value='';$('#desc').value='';notice('Dokument je uspešno povezan sa stavkom.');await renderDocs();
+ }catch(err){if(stored){const {error:cleanupError}=await db.storage.from('okk-dokumenta').remove([stored]);notice('Dokument nije sačuvan: '+err.message+(cleanupError?' Upozorenje: otpremljeni fajl možda treba ručno ukloniti.':''),true)}else notice('Dokument nije sačuvan: '+err.message,true)}
+ finally{btn.disabled=false}
+});
+(async()=>{try{const {data:{session},error}=await db.auth.getSession();if(error)throw error;if(!session){notice('Prijavi se na glavnoj stranici Club Managera, pa se vrati ovde.');return}const [a,b]=await Promise.all([readAll('blagajna_stavke'),readAll('finansije')]);rows.blagajna=a;rows.finansije=b;$('#app').hidden=false;notice('Prijava uspešna. Izaberi stavku i priloži dokument.');renderSelect()}catch(e){notice('Učitavanje nije uspelo: '+e.message,true)}})();
+</script>
+</body>
+</html>
