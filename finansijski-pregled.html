@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="sr">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>OKK Novi Pazar · Jedinstveni finansijski pregled V5.1</title>
+<style>
+:root{color-scheme:dark;--bg:#081729;--panel:#102640;--border:#315271;--text:#f2f7ff;--muted:#b9cce0;--blue:#4b9eff;--green:#49d5a2;--red:#ff8496}
+*{box-sizing:border-box}body{margin:0;background:linear-gradient(140deg,#0b2b4b,var(--bg) 55%);color:var(--text);font:15px system-ui,Segoe UI,Arial,sans-serif;min-height:100vh}header{padding:17px max(16px,calc((100vw - 1160px)/2));border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px}a{color:#9fceff}main{max-width:1160px;margin:auto;padding:18px 15px 70px}.muted{color:var(--muted)}.small{font-size:12px}h1{font-size:26px;margin:4px 0}h2{font-size:19px;margin:0 0 13px}.panel{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:17px;margin:14px 0}.filters{display:flex;align-items:end;gap:10px;flex-wrap:wrap}.filters label{display:grid;gap:7px;flex:1 1 180px;font-size:13px}.filters input{width:100%;font:inherit;padding:11px;background:#07192d;color:white;border:1px solid #526f8f;border-radius:9px}button{border:0;border-radius:9px;background:var(--blue);color:#081729;font:inherit;font-weight:750;padding:11px 15px;cursor:pointer}button.secondary{background:#274864;color:white}button:disabled{opacity:.5}.cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:11px}.card{border-radius:11px;background:#1b3855;padding:16px}.card span{display:block;color:var(--muted);font-size:12px;margin-bottom:8px}.card b{font-size:clamp(18px,2.1vw,27px);overflow-wrap:anywhere}.card small{display:block;color:var(--muted);margin-top:7px}.row{display:flex;justify-content:space-between;gap:12px;padding:9px 0;border-bottom:1px solid #35516a}.row:last-child{border-bottom:0}.row b{text-align:right}.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.scroll{overflow-x:auto}table{border-collapse:collapse;width:100%;min-width:620px}th,td{padding:10px 8px;border-bottom:1px solid #34506b;font-size:12px;text-align:left}th.num,td.num{text-align:right;white-space:nowrap}.note{padding:12px;border-radius:9px;border:1px solid #516f8e;margin-top:12px}.alert{border-color:#a57743;color:#ffdcac}.error{color:#ffb8c4}#status{white-space:pre-wrap}.report-head{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:flex-start}.signatures{display:flex;justify-content:space-between;gap:35px;margin:48px 0 20px}.signatures div{border-top:1px solid #69819c;flex:1;text-align:center;padding:8px 0;font-size:12px}
+@media(max-width:780px){.cards{grid-template-columns:repeat(2,minmax(0,1fr))}.grid{grid-template-columns:1fr}}
+@page{size:A4 landscape;margin:12mm}
+@media print{:root{color-scheme:light}body{background:white;color:black;font:11px Arial}header,.noprint{display:none!important}main{max-width:none;padding:0}.panel{background:white;color:black;border:1px solid #bbb;break-inside:avoid;padding:10px;margin:9px 0}.card{background:white;border:1px solid #ccc;color:black;padding:8px}.card span,.card small,.muted{color:#333}.card b{font-size:17px}.cards{gap:5px}table{min-width:0}td,th{font-size:9px;padding:5px}.scroll{overflow:visible}.signatures{margin-top:38px}h1{font-size:20px}h2{font-size:14px}a{color:black;text-decoration:none}}
+</style>
+</head>
+<body>
+<header><div><strong>◈ OKK NOVI PAZAR</strong><div class="muted small">CLUB MANAGER · FINANSIJSKI PREGLED V5.1</div></div><div><a href="./index.html">← Kontrolna tabla</a> · <a href="./banka.html">Banka</a> · <a href="./knjiga-blagajne.html">Blagajna</a></div></header>
+<main>
+<div class="report-head"><div><h1>Jedinstveni finansijski pregled</h1><div class="muted">Finansije · Banka · Blagajna · Dugovanja</div></div><div id="generated" class="muted small"></div></div>
+<div class="panel noprint"><h2>Period izveštaja</h2><div class="filters"><label>Od datuma<input id="from" type="date"></label><label>Do datuma<input id="to" type="date"></label><button id="show">Prikaži</button><button class="secondary" id="month">Ovaj mesec</button><button class="secondary" id="all">Cela evidencija</button><button id="print">Štampaj / PDF</button><button class="secondary" id="csv">Excel CSV</button></div><p class="muted small">Prihodi i rashodi odnose se na izabrani period. Stanje banke, blagajne i dugova je na datum završetka perioda. Prenos bankа ↔ blagajna ne računa se kao novi prihod ili rashod.</p></div>
+<div id="status" class="panel">Proveravam prijavu i učitavam podatke...</div>
+<section id="report" hidden>
+<div class="panel"><div class="report-head"><h2 id="period"></h2><span class="muted small" id="recordCount"></span></div><div class="cards" id="cards"></div><div class="note" id="reconcile"></div></div>
+<div class="grid">
+<div class="panel"><h2>Prihodi i rashodi (period)</h2><div id="finSummary"></div><p class="muted small">Isplate dugovanja i gotovinska/bankovna plaćanja koja su već evidentirana u Finansijama ne sabiraju se ponovo kao novi rashod.</p></div>
+<div class="panel"><h2>Novčana sredstva (na kraj perioda)</h2><div id="cashSummary"></div><p class="muted small">Iznosi se računaju iz evidentiranih transakcija. Uporedi ih sa stvarnim bankovnim izvodom i stanjem gotovine.</p></div>
+</div>
+<div class="grid">
+<div class="panel"><h2>Dugovanja (na kraj perioda)</h2><div id="debtsSummary"></div><p class="muted small">Presek dugovanja koristi datum kreiranja i evidentirane isplate. Za istorijske datume proveri da li su stara dugovanja bila uneta na vreme.</p></div>
+<div class="panel"><h2>Kontrola prenosa i povezanih stavki</h2><div id="checkSummary"></div><p class="muted small">Razlike su signali za proveru, ne automatske ispravke. Mogu postojati vremenska odstupanja između knjiženja u banci i blagajni.</p></div>
+</div>
+<div class="panel"><h2>Finansijske stavke u periodu</h2><div class="scroll"><table><thead><tr><th>Datum</th><th>Vrsta</th><th>Opis</th><th class="num">Iznos (RSD)</th><th>Veza</th></tr></thead><tbody id="transactions"></tbody></table></div></div>
+<div class="panel"><h2>Preostala dugovanja po sezoni</h2><div class="scroll"><table><thead><tr><th>Sezona</th><th class="num">Početni dug</th><th class="num">Plaćeno do kraja perioda</th><th class="num">Preostalo</th></tr></thead><tbody id="seasons"></tbody></table></div></div>
+<div class="signatures"><div>Sastavio / blagajnik</div><div>Kontrolisao / odgovorno lice</div></div>
+<p class="muted small">Interni upravljački izveštaj OKK Novi Pazar. Nije zamena za zvanične poslovne knjige niti računovodstveno kontiranje. Za predaju knjigovođi proveriti početna stanja, datume, salda, bankovne izvode i originalnu dokumentaciju.</p>
+</section>
+</main>
+<script type="module">
+import {createClient} from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
+const db=createClient('https://ysqdigsexbnssqmngyoe.supabase.co','sb_publishable_a8A4BStDplZrHyzxvJBtSw_pJCxk4s3');
+const $=s=>document.querySelector(s);
+const esc=x=>String(x??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+const num=x=>Number(x||0),fmt=x=>num(x).toLocaleString('sr-RS',{minimumFractionDigits:2,maximumFractionDigits:2});
+const date=x=>String(x??'').slice(0,10),pretty=x=>x?date(x).split('-').reverse().join('.'):'—';
+const localDate=d=>[d.getFullYear(),String(d.getMonth()+1).padStart(2,'0'),String(d.getDate()).padStart(2,'0')].join('-');
+const cashIn=new Set(['pocetno_stanje','podizanje_sa_racuna','gotovinski_prihod']);
+const bankIn=new Set(['pocetno_stanje','priliv','uplata_gotovine']);
+const byDate=(a,b)=>date(a.datum).localeCompare(date(b.datum))||num(a.id)-num(b.id);
+const allData={};let current=null;
+function status(s,bad=false){$('#status').textContent=s;$('#status').classList.toggle('error',bad);$('#status').hidden=false;}
+async function fetchAll(table){const result=[];for(let i=0;i<100000;i+=1000){const {data,error}=await db.from(table).select('*').order('id').range(i,i+999);if(error)throw Error(table+': '+error.message);result.push(...data);if(data.length<1000)return result;}throw Error('Tabela '+table+' ima previše redova za izveštaj.');}
+function line(label,value){return '<div class="row"><span>'+esc(label)+'</span><b>'+fmt(value)+' RSD</b></div>';}
+function month(){const d=new Date();$('#from').value=localDate(new Date(d.getFullYear(),d.getMonth(),1));$('#to').value=localDate(new Date(d.getFullYear(),d.getMonth()+1,0));}
+function render(){const from=$('#from').value,to=$('#to').value;if(from&&to&&from>to){status('Datum od mora biti pre datuma do.',true);$('#report').hidden=true;return;}$('#status').hidden=true;
+const within=x=>(!from||date(x.datum)>=from)&&(!to||date(x.datum)<=to),until=x=>!to||date(x.datum)<=to;
+const finances=allData.finansije.filter(within).sort(byDate),finTo=allData.finansije.filter(until);
+const income=finances.filter(x=>x.vrsta==='prihod').reduce((s,x)=>s+num(x.iznos),0),expense=finances.filter(x=>x.vrsta==='rashod').reduce((s,x)=>s+num(x.iznos),0);
+const bankPeriod=allData.banka_stavke.filter(within),cashPeriod=allData.blagajna_stavke.filter(within);
+const bankTo=allData.banka_stavke.filter(until),cashTo=allData.blagajna_stavke.filter(until);
+const bankBalance=bankTo.reduce((s,x)=>s+num(x.iznos)*(bankIn.has(x.vrsta)?1:-1),0),cashBalance=cashTo.reduce((s,x)=>s+num(x.iznos)*(cashIn.has(x.vrsta)?1:-1),0);
+const bankInPeriod=bankPeriod.filter(x=>bankIn.has(x.vrsta)).reduce((s,x)=>s+num(x.iznos),0),bankOutPeriod=bankPeriod.filter(x=>!bankIn.has(x.vrsta)).reduce((s,x)=>s+num(x.iznos),0),cashInPeriod=cashPeriod.filter(x=>cashIn.has(x.vrsta)).reduce((s,x)=>s+num(x.iznos),0),cashOutPeriod=cashPeriod.filter(x=>!cashIn.has(x.vrsta)).reduce((s,x)=>s+num(x.iznos),0);
+const debtRows=allData.dugovanja.filter(x=>!to||!x.created_at||date(x.created_at)<=to),debtIds=new Set(debtRows.map(x=>String(x.id))),paymentsTo=allData.isplate.filter(x=>until(x)&&debtIds.has(String(x.dugovanje_id))),paymentsPeriod=allData.isplate.filter(within);
+const originalDebt=debtRows.reduce((s,x)=>s+num(x.pocetni_dug),0),debtPaid=paymentsTo.reduce((s,x)=>s+num(x.iznos),0),debtRemaining=originalDebt-debtPaid;
+const bankCashOut=bankTo.filter(x=>x.vrsta==='podizanje_gotovine').reduce((s,x)=>s+num(x.iznos),0),cashBankIn=cashTo.filter(x=>x.vrsta==='podizanje_sa_racuna').reduce((s,x)=>s+num(x.iznos),0),bankCashIn=bankTo.filter(x=>x.vrsta==='uplata_gotovine').reduce((s,x)=>s+num(x.iznos),0),cashBankOut=cashTo.filter(x=>x.vrsta==='povracaj_na_racun').reduce((s,x)=>s+num(x.iznos),0);
+const bankLinks=new Set(bankTo.map(x=>x.finansije_id).filter(Boolean).map(String)),cashLinks=new Set(cashTo.map(x=>x.finansije_id).filter(Boolean).map(String)),overlap=[...bankLinks].filter(x=>cashLinks.has(x));const missing=finTo.filter(x=>!bankLinks.has(String(x.id))&&!cashLinks.has(String(x.id)));
+const cards=[['Prihodi u periodu',income],['Rashodi u periodu',expense],['Finansijski rezultat',income-expense],['Stanje banke',bankBalance],['Stanje blagajne',cashBalance],['Preostala dugovanja',debtRemaining]];
+$('#cards').innerHTML=cards.map(([name,value])=>'<div class="card"><span>'+esc(name)+'</span><b>'+fmt(value)+' RSD</b></div>').join('');
+$('#period').textContent='Period: '+(from?pretty(from):'početak evidencije')+' – '+(to?pretty(to):'kraj evidencije');$('#recordCount').textContent='Finansijske stavke: '+finances.length;$('#generated').textContent='Izveštaj sačinjen: '+new Date().toLocaleString('sr-RS');
+$('#finSummary').innerHTML=line('Prihodi',income)+line('Rashodi',expense)+line('Razlika (prihodi − rashodi)',income-expense)+line('Isplate starih dugovanja u periodu (informativno)',paymentsPeriod.reduce((s,x)=>s+num(x.iznos),0));
+$('#cashSummary').innerHTML=line('Banka – ulazi u periodu',bankInPeriod)+line('Banka – izlazi u periodu',bankOutPeriod)+line('Banka – stanje na datum',bankBalance)+line('Blagajna – ulazi u periodu',cashInPeriod)+line('Blagajna – izlazi u periodu',cashOutPeriod)+line('Blagajna – stanje na datum',cashBalance)+line('Banka + blagajna',bankBalance+cashBalance);
+$('#debtsSummary').innerHTML=line('Evidentiran početni dug',originalDebt)+line('Ukupno isplaćeno do datuma',debtPaid)+line('Preostalo dugovanje',debtRemaining);
+$('#checkSummary').innerHTML=line('Banka → Blagajna (banka)',bankCashOut)+line('Banka → Blagajna (blagajna)',cashBankIn)+line('Blagajna → Banka (banka)',bankCashIn)+line('Blagajna → Banka (blagajna)',cashBankOut)+line('Nepovezane finansijske stavke do datuma',missing.length).replace(' RSD</b>',' stavki</b>')+line('Stavke povezane u oba modula',overlap.length).replace(' RSD</b>',' stavki</b>');
+const reasons=[];if(Math.abs(bankCashOut-cashBankIn)>0.005)reasons.push('Podizanja gotovine ne odgovaraju evidentiranim prijemima u blagajni.');if(Math.abs(bankCashIn-cashBankOut)>0.005)reasons.push('Uplate gotovine na račun ne odgovaraju povraćajima iz blagajne.');if(overlap.length)reasons.push('Neke finansijske stavke povezane su i sa bankom i sa blagajnom.');if(bankBalance<-.005||cashBalance<-.005)reasons.push('Jedan od salda je negativan – proveri početno stanje i datume.');
+$('#reconcile').classList.toggle('alert',reasons.length>0);$('#reconcile').textContent=reasons.length?'Provera: '+reasons.join(' '):'Kontrolni zbir prenosa bankа ↔ blagajna se poklapa prema ukupno unetim iznosima. Ovo ne potvrđuje usaglašenost pojedinačnih transakcija.';
+const combinedLinks=new Set([...bankLinks,...cashLinks]);$('#transactions').innerHTML=finances.length?finances.map(x=>'<tr><td>'+esc(pretty(x.datum))+'</td><td>'+esc(x.vrsta)+'</td><td>'+esc(x.opis)+'</td><td class="num">'+fmt(x.iznos)+'</td><td>'+ (combinedLinks.has(String(x.id))?'Povezano':'Nije povezano')+'</td></tr>').join(''):'<tr><td colspan="5">Nema finansijskih stavki u periodu.</td></tr>';
+const seasons={};for(const d of debtRows){const key=d.sezona||'Bez sezone';if(!seasons[key])seasons[key]={total:0,paid:0};seasons[key].total+=num(d.pocetni_dug);}const debtLookup=new Map(debtRows.map(x=>[String(x.id),x]));for(const p of paymentsTo){const d=debtLookup.get(String(p.dugovanje_id));if(d)seasons[d.sezona||'Bez sezone'].paid+=num(p.iznos);}
+$('#seasons').innerHTML=Object.keys(seasons).length?Object.entries(seasons).sort((a,b)=>a[0].localeCompare(b[0])).map(([name,x])=>'<tr><td>'+esc(name)+'</td><td class="num">'+fmt(x.total)+'</td><td class="num">'+fmt(x.paid)+'</td><td class="num">'+fmt(x.total-x.paid)+'</td></tr>').join(''):'<tr><td colspan="4">Nema evidentiranih dugovanja.</td></tr>';
+current={from,to,income,expense,bankBalance,cashBalance,originalDebt,debtPaid,debtRemaining,finances,bankInPeriod,bankOutPeriod,cashInPeriod,cashOutPeriod,reasons};$('#report').hidden=false;
+}
+$('#show').onclick=render;$('#month').onclick=()=>{month();render();};$('#all').onclick=()=>{$('#from').value='';$('#to').value='';render();};$('#print').onclick=()=>{render();if(!$('#report').hidden)window.print();};
+$('#csv').onclick=()=>{render();if(!current||$('#report').hidden)return;const q=x=>'"'+String(x??'').replace(/"/g,'""')+'"';const rows=[['OKK Novi Pazar – Jedinstveni finansijski pregled'],['Od',current.from,'Do',current.to],['Pokazatelj','Iznos RSD'],['Prihodi',current.income],['Rashodi',current.expense],['Finansijski rezultat',current.income-current.expense],['Stanje banke',current.bankBalance],['Stanje blagajne',current.cashBalance],['Preostala dugovanja',current.debtRemaining],[],['Datum','Vrsta','Opis','Iznos RSD']];for(const r of current.finances)rows.push([date(r.datum),r.vrsta,r.opis,num(r.iznos).toFixed(2)]);const blob=new Blob(['\ufeff'+rows.map(row=>row.map(q).join(';')).join('\r\n')],{type:'text/csv;charset=utf-8'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='OKK_Finansijski_Pregled_'+(current.from||'sve')+'_'+(current.to||'sve')+'.csv';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),3000);};
+(async()=>{try{const {data:{user},error}=await db.auth.getUser();if(error||!user){status('Prijavi se prvo na glavnoj stranici Club Managera, pa otvori finansijski pregled.');return;}const tables=['finansije','banka_stavke','blagajna_stavke','dugovanja','isplate'];const results=await Promise.all(tables.map(fetchAll));tables.forEach((t,i)=>allData[t]=results[i]);month();render();}catch(e){status('Učitavanje nije uspelo: '+e.message,true);}})();
+</script>
+</body></html>
