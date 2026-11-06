@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="sr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#081729">
+<title>OKK Novi Pazar · Pravdanje troškova</title>
+<style>
+:root{color-scheme:dark;--bg:#081729;--panel:#102640;--border:#345371;--text:#f3f8ff;--muted:#b5cbe0;--blue:#4b9eff;--green:#58dab0;--red:#ff9caa;--amber:#ffd18a}
+*{box-sizing:border-box}[hidden]{display:none!important}body{margin:0;min-height:100vh;background:linear-gradient(145deg,#0d2c50,#081729 55%);font:15px system-ui,Segoe UI,Arial,sans-serif;color:var(--text)}header{padding:18px max(16px,calc((100vw - 1180px)/2));border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}a{color:#a5d1ff}main{max-width:1180px;margin:auto;padding:20px 15px 80px}h1{font-size:28px;margin:3px 0 8px}h2{font-size:20px;margin:0 0 15px}h3{margin:0 0 8px;font-size:16px}p{line-height:1.55}.muted{color:var(--muted)}.small{font-size:12px}.panel{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:18px;margin:16px 0}.cards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}.card{background:#1b3a58;border-radius:11px;padding:15px}.card small{display:block;color:var(--muted);margin-bottom:7px}.card b{display:block;font-size:clamp(19px,2.2vw,27px);font-variant-numeric:tabular-nums}.toolbar{display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap}.buttons{display:flex;gap:9px;align-items:center;flex-wrap:wrap}button{font:inherit;border:0;background:var(--blue);color:#07182c;border-radius:9px;padding:10px 14px;font-weight:750;cursor:pointer}button.secondary{background:#284966;color:white}button.danger{background:#743044;color:white}button:disabled{opacity:.55;cursor:wait}.scroll{overflow:auto}table{border-collapse:collapse;width:100%;min-width:900px}th,td{padding:11px 9px;font-size:13px;vertical-align:top;text-align:left;border-bottom:1px solid #365270}th{font-size:12px;color:#c1d6ea}tr.selected{background:#1b4465}td.num,th.num{text-align:right;white-space:nowrap}.pill{display:inline-block;border:1px solid #6f92ac;border-radius:24px;padding:4px 8px;font-size:12px;white-space:nowrap}.pill.green{border-color:#408d79;color:#a5f1d6}.pill.amber{border-color:#9d7542;color:#ffdaa7}.pill.red{border-color:#a4505e;color:#ffb4be}.detail-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap}.detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.subpanel{border:1px solid #355775;border-radius:11px;padding:14px;background:#0c2037}label{display:block;font-size:13px;font-weight:650;margin:10px 0 6px}input,textarea{display:block;width:100%;padding:11px;color:white;border:1px solid #587896;background:#07192b;border-radius:8px;font:inherit}textarea{min-height:70px}.receipt{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;padding:12px 0;border-bottom:1px solid #365270;flex-wrap:wrap}.receipt b{overflow-wrap:anywhere}.receipt small{color:var(--muted)}.notice{border:1px solid #526f8c;padding:12px;border-radius:10px}.error{color:#ffadb9;border-color:#a25460!important}.help{color:var(--muted);font-size:12px}.mono{font-variant-numeric:tabular-nums}.nowrap{white-space:nowrap}#status{white-space:pre-wrap}.actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}#docs{min-height:55px}
+@media(max-width:850px){.cards{grid-template-columns:repeat(2,minmax(0,1fr))}.detail-grid{grid-template-columns:1fr}}@media(max-width:560px){.cards{grid-template-columns:1fr 1fr}.card b{font-size:20px}}
+@page{size:A4 landscape;margin:12mm}@media print{:root{color-scheme:light}body{background:white!important;color:black;font:11px Arial}header,.noprint,#status{display:none!important}main{max-width:none;padding:0}.panel{background:white;color:black;border:0;margin:7px 0;padding:4px}.card,.subpanel{background:white;color:black;border:1px solid #999}.card small,.muted,.help,.receipt small{color:#333}.cards{gap:6px}.card b{font-size:18px}table{min-width:0}th,td{color:black;font-size:9px;padding:6px;border-bottom:1px solid #aaa}h1{font-size:21px}h2{font-size:15px}.pill{color:black!important;border-color:#777}.detail-grid{grid-template-columns:1fr 1fr}#detail{break-inside:avoid}}
+</style>
+</head>
+<body>
+<header><div><b>◈ OKK NOVI PAZAR</b><div class="muted small">CLUB MANAGER · PRAVDANJE TROŠKOVA</div></div><nav><a href="./index.html">Početna</a> · <a href="./finansijski-pregled.html">Finansijski pregled</a> · <a href="./dokumenta.html">Sva dokumenta</a> · <a href="./knjiga-blagajne.html">Knjiga blagajne</a></nav></header>
+<main>
+<div class="toolbar"><div><h1>Pravdanje troškova</h1><div class="muted">Uplate za pravdanje i svi ostali rashodi · fotografije, računi, fakture i priznanice</div></div><div class="buttons noprint"><button class="secondary" id="refresh" type="button">Osveži</button><button class="secondary" id="csv" type="button">Excel CSV</button><button id="print" type="button">Štampaj / PDF</button></div></div>
+<p class="notice small">Ovo je <b>evidencija dokumentacije uz već knjižene rashode</b>, ne nova isplata iz blagajne. Prva kartica prati sredstva preneta za pravdanje, a druga ostale rashode kluba. Dodavanje računa <b>ne menja Finansije, Banku, Dugovanja ni saldo blagajne</b>. Iznos priloženih računa je <b>dokumentovan</b>, a ne automatski knjigovodstveno odobren.</p>
+<div class="panel" id="status" role="status">Proveravam prijavu i učitavam podatke...</div>
+<section id="app" hidden>
+<div class="cards" id="summary"></div>
+<section class="panel"><div class="toolbar"><h2>Rashodi za dokumentovanje</h2><span class="muted small">Izaberi grupu i dodaj račune uz postojeći rashod.</span></div>
+<div class="buttons noprint" style="margin:14px 0"><button type="button" id="modeTransfers">Uplate na moj račun</button><button class="secondary" type="button" id="modeOther">Ostali rashodi</button></div>
+<div class="toolbar noprint" style="margin:10px 0 16px"><div><b id="tableTitle">Uplate na moj račun</b><div class="muted small" id="tableHelp">Izvodi već povezani sa Finansijama.</div></div><label style="margin:0;flex:1;max-width:420px">Pretraga rashoda<input id="search" type="search" placeholder="Datum, opis, iznos ili ID finansija..." autocomplete="off" style="margin-top:6px"></label></div>
+<div class="scroll"><table><thead><tr><th>Datum</th><th id="colRef">Izvod</th><th>Namena</th><th class="num" id="colAmount">Iznos (RSD)</th><th class="num">Dokumentovano</th><th class="num">Razlika</th><th>Status</th><th class="noprint">Radnja</th></tr></thead><tbody id="payments"></tbody><tfoot id="paymentsTotal"></tfoot></table></div></section>
+<section class="panel" id="detail" hidden>
+<div class="detail-head"><div><h2 id="detailTitle">Računi za izabrani rashod</h2><p class="muted small" id="detailMeta"></p></div><div class="buttons noprint"><button class="secondary" type="button" id="closeDetail">Zatvori</button></div></div>
+<div class="cards" id="detailStats"></div>
+<p class="notice small noprint" style="border-color:#58dab0;background:#10354a">👇 <b>Račun dodaješ ovde, u levom delu ispod.</b> Unesi iznos, opis i izaberi fotografiju ili PDF, pa klikni <b>„Sačuvaj račun i iznos“</b>. Poruka „Nema priloga“ samo znači da još nema dodatih dokumenata.</p>
+<div class="detail-grid" style="margin-top:15px">
+<div class="subpanel noprint" id="addReceipt"><h3>➕ Dodaj račun / priznanicu</h3>
+<form id="uploadForm">
+<label for="amount">Iznos sa računa (RSD)</label><input id="amount" type="number" min="0.01" step="0.01" inputmode="decimal" required placeholder="Npr. 2500.00">
+<label for="desc">Opis / broj računa / kome je plaćeno</label><textarea id="desc" required maxlength="500" placeholder="Npr. gorivo za put u Šabac, fiskalni račun br. ..."></textarea>
+<label for="file">Fotografija ili PDF računa (najviše 10 MB)</label><input type="file" id="file" required accept="image/jpeg,image/png,image/webp,application/pdf">
+<p class="help">Jedan dokument po unosu; možeš dodati više računa za istu uplatu ili rashod. Podržani su JPG, PNG, WEBP i PDF. Sadržaj ostaje u privatnom skladištu <code>okk-dokumenta</code>.</p>
+<button id="submit" type="submit">Sačuvaj račun i iznos</button>
+</form></div>
+<div class="subpanel"><h3>Priloženi dokumenti</h3><div id="docs">Još nema priloga.</div></div>
+</div>
+</section>
+<p class="muted small">Interna kontrolna evidencija. Knjigovođa treba da proveri račune, priznanice, svrhu troška i da li su sredstva predata/utrošena kao avans, gotovinska isplata ili druga odgovarajuća kategorija. Iznos bez priloga nije nužno nenamenski potrošen. Izveštaj ne predstavlja potvrdu o poreskoj ili računovodstvenoj ispravnosti dokumenata.</p>
+</section>
+</main>
+<script type="module">
+import {createClient} from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
+const db=createClient('https://ysqdigsexbnssqmngyoe.supabase.co','sb_publishable_a8A4BStDplZrHyzxvJBtSw_pJCxk4s3');
+const $=q=>document.querySelector(q), esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const fmt=v=>Number(v||0).toLocaleString('sr-RS',{minimumFractionDigits:2,maximumFractionDigits:2});
+const dateSr=v=>String(v??'').slice(0,10).split('-').reverse().join('.');
+const round=v=>Math.round((Number(v)+Number.EPSILON)*100)/100;
+// Nasumicno ime fajla; radi i van secure-context pregleda.
+const makeFileId=()=>globalThis.crypto?.randomUUID?.() || ('d'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2));
+let payments=[],transfers=[],otherExpenses=[],documents=[],selected=null,loading=false,mode='transfers',searchTerm='';
+const validTypes={'application/pdf':'pdf','image/jpeg':'jpg','image/png':'png','image/webp':'webp'};
+function notice(message,bad=false){$('#status').textContent=message;$('#status').classList.toggle('error',bad);$('#status').hidden=false;}
+async function readAll(table,orderBy){const all=[];for(let i=0;i<100000;i+=1000){const {data,error}=await db.from(table).select('*').order(orderBy).range(i,i+999);if(error)throw Error(table+': '+error.message);all.push(...data);if(data.length<1000)return all;}throw Error('Evidencija ima više od 100.000 zapisa, potrebno je proširiti izveštaj.');}
+function docsFor(p){return documents.filter(d=>Number(d.finansije_id)===Number(p.finansije_id));}
+function amountPaid(p){return round(docsFor(p).reduce((s,d)=>s+Number(d.iznos_racuna||0),0));}
+function label(p){const paid=amountPaid(p),owed=round(p.iznos-paid),ds=docsFor(p);if(!ds.length)return ['Nema priloga','amber'];if(ds.some(d=>d.iznos_racuna==null))return ['Prilog bez iznosa','amber'];if(owed<-.005)return ['Prekoračenje','red'];if(owed>.005)return ['Delimično dokumentovano','amber'];return ['Iznos pokriven računima','green'];}
+function paymentRow(p){const paid=amountPaid(p),remaining=round(Number(p.iznos)-paid),[name,tone]=label(p);const ref=p.broj_izvoda||('Finansije #'+p.finansije_id);return '<tr class="'+(selected===Number(p.finansije_id)?'selected':'')+'"><td>'+esc(dateSr(p.datum))+'</td><td>'+esc(ref)+'</td><td>'+esc(p.namena_uplate)+'</td><td class="num">'+fmt(p.iznos)+'</td><td class="num">'+fmt(paid)+'</td><td class="num">'+fmt(remaining)+'</td><td><span class="pill '+tone+'">'+esc(name)+'</span></td><td class="noprint"><button type="button" class="secondary" data-select="'+Number(p.finansije_id)+'">➕ Dodaj račun</button></td></tr>';}
+function summaries(){
+ const total=round(payments.reduce((s,p)=>s+Number(p.iznos||0),0)),documented=round(payments.reduce((s,p)=>s+amountPaid(p),0)),delta=round(total-documented);
+ const countDocs=payments.reduce((s,p)=>s+docsFor(p).length,0),trans=mode==='transfers';
+ $('#summary').innerHTML=[[(trans?'Preneto na moj račun':'Ostali rashodi'),fmt(total)+' RSD'],['Dokumentovano računima',fmt(documented)+' RSD'],['Preostalo za dokumentovanje',fmt(delta)+' RSD'],[(trans?'Broj uplata':'Broj rashoda')+' / priloga',payments.length+' / '+countDocs]].map(([a,b])=>'<div class="card"><small>'+esc(a)+'</small><b>'+esc(b)+'</b></div>').join('');
+ const shown=payments.filter(p=>!searchTerm||[p.datum,p.namena_uplate,p.broj_izvoda,p.iznos,p.finansije_id].join(' ').toLocaleLowerCase('sr').includes(searchTerm));
+ $('#payments').innerHTML=shown.length?shown.map(paymentRow).join(''):'<tr><td colspan="8">Nema rashoda za izabranu pretragu.</td></tr>';
+ $('#paymentsTotal').innerHTML='<tr><th colspan="3">UKUPNO U OVOJ GRUPI</th><th class="num">'+fmt(total)+'</th><th class="num">'+fmt(documented)+'</th><th class="num">'+fmt(delta)+'</th><th colspan="2"></th></tr>';
+ $('#modeTransfers').classList.toggle('secondary',!trans);$('#modeOther').classList.toggle('secondary',trans);
+ $('#tableTitle').textContent=trans?'Uplate na moj račun ('+payments.length+')':'Ostali rashodi ('+payments.length+')';
+ $('#tableHelp').textContent=trans?'Sedam uplata za pravdanje. Račune povezuješ sa postojećim finansijskim stavkama.':'Svi ostali već evidentirani rashodi, uključujući isplate dugova i naknade banke. Dodavanje računa ne knjiži novi trošak.';
+ $('#colRef').textContent=trans?'Izvod':'Izvod / Finansije ID';$('#colAmount').textContent=trans?'Preneto (RSD)':'Rashod (RSD)';
+}
+function renderDetail(){const p=payments.find(x=>Number(x.finansije_id)===selected);$('#detail').hidden=!p;if(!p)return;const ds=docsFor(p),paid=amountPaid(p),left=round(Number(p.iznos)-paid),trans=mode==='transfers';$('#detailTitle').textContent=(trans?'Uplata #'+p.banka_id:'Rashod #'+p.finansije_id)+' · '+dateSr(p.datum);$('#detailMeta').textContent=(p.namena_uplate||'')+(p.broj_izvoda?' · izvod '+p.broj_izvoda:'')+' · Finansije #'+p.finansije_id;$('#detailStats').innerHTML=[[(trans?'Preneto':'Rashod'),p.iznos],['Dokumentovano',paid],['Razlika',left],['Broj računa',ds.length]].map(([title,amount],i)=>'<div class="card"><small>'+esc(title)+'</small><b>'+ (i===3?esc(amount):fmt(amount)+' RSD') +'</b></div>').join('');$('#docs').innerHTML=ds.length?ds.map(d=>'<div class="receipt"><div style="max-width:65%"><b>'+esc(d.naziv_fajla)+'</b><div class="small muted">'+esc(d.opis||'Bez opisa')+'</div><small>Dokument #'+esc(d.id)+' · '+esc(String(d.datum_dodavanja||'').slice(0,10))+'</small></div><div style="text-align:right"><b>'+ (d.iznos_racuna==null?'Bez unetog iznosa':fmt(d.iznos_racuna)+' RSD')+'</b><div class="actions noprint" style="margin-top:8px"><button class="secondary" type="button" data-open="'+Number(d.id)+'">Otvori</button><button class="danger" type="button" data-delete="'+Number(d.id)+'">Obriši</button></div></div></div>').join(''):'<p class="muted">Nema priloga. Ovo je normalno dok ne uneseš prvi račun kroz obrazac <b>„Dodaj račun / priznanicu“</b> levo.</p>';
+const status=label(p);if(left<-.005)notice('Upozorenje: dokumentovani iznosi prelaze preneti iznos za '+fmt(-left)+' RSD. Proveri povezanost računa.',true);
+}
+function render(){summaries();renderDetail();}
+function changeMode(next){mode=next;payments=mode==='transfers'?transfers:otherExpenses;selected=null;searchTerm='';$('#search').value='';$('#detail').hidden=true;render();}
+async function refresh(keepSelection=true){
+ const [t,f,b,allDocs]=await Promise.all([readAll('okk_uplate_za_pravdanje','banka_id'),readAll('finansije','id'),readAll('banka_stavke','id'),readAll('dokumenta_prilozi','id')]);
+ const expenseIds=new Set(f.filter(x=>x.vrsta==='rashod').map(x=>Number(x.id)));
+ transfers=t.filter(x=>expenseIds.has(Number(x.finansije_id)));
+ const transferIds=new Set(transfers.map(x=>Number(x.finansije_id)));
+ const bankByFinance=new Map();for(const x of b){const fid=Number(x.finansije_id);if(Number.isInteger(fid)&&fid>0&&!bankByFinance.has(fid))bankByFinance.set(fid,x.broj_izvoda);}
+ otherExpenses=f.filter(x=>x.vrsta==='rashod'&&!transferIds.has(Number(x.id))).map(x=>({finansije_id:x.id,banka_id:null,datum:x.datum,iznos:x.iznos,namena_uplate:x.opis,broj_izvoda:bankByFinance.get(Number(x.id))||null})).sort((a,b)=>String(b.datum).localeCompare(String(a.datum))||Number(b.finansije_id)-Number(a.finansije_id));
+ documents=allDocs.filter(d=>expenseIds.has(Number(d.finansije_id)));
+ payments=mode==='transfers'?transfers:otherExpenses;
+ if(!keepSelection||!payments.some(p=>Number(p.finansije_id)===selected))selected=payments.length?Number(payments[0].finansije_id):null;
+ render();
+}
+$('#payments').addEventListener('click',e=>{const btn=e.target.closest('[data-select]');if(!btn)return;selected=Number(btn.dataset.select);render();$('#addReceipt').scrollIntoView({behavior:'smooth',block:'start'});$('#amount').focus({preventScroll:true});});
+$('#modeTransfers').onclick=()=>changeMode('transfers');
+$('#modeOther').onclick=()=>changeMode('other');
+$('#search').addEventListener('input',e=>{searchTerm=String(e.target.value||'').trim().toLocaleLowerCase('sr');summaries();});
+$('#closeDetail').onclick=()=>{$('#detail').hidden=true;selected=null;summaries();};
+$('#refresh').onclick=async()=>{try{await refresh();notice('Podaci su osveženi.')}catch(err){notice('Osvežavanje nije uspelo: '+err.message,true)}};
+$('#uploadForm').addEventListener('submit',async e=>{e.preventDefault();if(loading)return;const p=payments.find(p=>Number(p.finansije_id)===selected),file=$('#file').files[0],amount=round($('#amount').value),desc=$('#desc').value.trim(),btn=$('#submit');if(!p){notice('Izaberi rashod ili uplatu.',true);return}if(!file||!desc||!Number.isFinite(amount)||amount<=0){notice('Unesi iznos i opis i izaberi dokument.',true);return}if(!(file.type in validTypes)||file.size>10*1024*1024||file.size<=0){notice('Dozvoljeni su PDF, JPG, PNG i WEBP do 10 MB.',true);return}const already=amountPaid(p),remaining=round(Number(p.iznos)-already);if(amount>remaining+0.005){notice('Iznos dokumenta ('+fmt(amount)+' RSD) prelazi preostali iznos ('+fmt(remaining)+' RSD). Proveri podatke.',true);return}loading=true;btn.disabled=true;let stored=null;
+try{const path='finansije/'+Number(p.finansije_id)+'/'+makeFileId()+'.'+validTypes[file.type];const up=await db.storage.from('okk-dokumenta').upload(path,file,{contentType:file.type,upsert:false});if(up.error)throw up.error;stored=path;
+const item={finansije_id:Number(p.finansije_id),naziv_fajla:file.name,putanja:path,tip_fajla:file.type,velicina:file.size,opis:desc,iznos_racuna:amount};const {data,error}=await db.from('dokumenta_prilozi').insert(item).select('id');if(error)throw error;if(!data?.length)throw Error('Baza nije potvrdila unos priloga.');stored=null;$('#uploadForm').reset();try{await refresh();notice('Račun je dodat i iznos je uračunat u dokumentovana sredstva. Finansije i Banka nisu menjane.');}catch(refreshErr){notice('Račun je sačuvan, ali pregled nije osvežen: '+refreshErr.message+'. Klikni Osveži.',true);}
+}catch(err){let cleanup='';if(stored){const r=await db.storage.from('okk-dokumenta').remove([stored]);if(r.error)cleanup=' Fajl je možda ostao u privatnom skladištu.'}notice('Dodavanje nije uspelo: '+err.message+cleanup,true);}
+finally{loading=false;btn.disabled=false;}
+});
+$('#docs').addEventListener('click',async e=>{const open=e.target.closest('[data-open]');if(open){const d=documents.find(x=>Number(x.id)===Number(open.dataset.open));if(!d)return;open.disabled=true;try{const {data,error}=await db.storage.from('okk-dokumenta').createSignedUrl(d.putanja,120);if(error)throw error;window.open(data.signedUrl,'_blank','noopener,noreferrer');}catch(err){notice('Dokument nije moguće otvoriti: '+err.message,true)}finally{open.disabled=false}return;}
+const del=e.target.closest('[data-delete]');if(!del)return;const d=documents.find(x=>Number(x.id)===Number(del.dataset.delete));if(!d)return;if(!confirm('Obrisati dokument „'+d.naziv_fajla+'“ i njegov iznos iz pravdanja? Sam rashod i bankarski izvod ostaju neizmenjeni.'))return;del.disabled=true;try{const {data,error}=await db.from('dokumenta_prilozi').delete().eq('id',d.id).select('id');if(error)throw error;if(!data?.length)throw Error('Brisanje zapisa nije potvrđeno.');const result=await db.storage.from('okk-dokumenta').remove([d.putanja]);await refresh();notice(result.error?'Zapis je obrisan, ali fajl nije uklonjen iz skladišta: '+result.error.message:'Dokument i iznos su uklonjeni iz pravdanja; Finansije i Banka nisu menjane.',!!result.error);}catch(err){notice('Dokument nije obrisan: '+err.message,true);}finally{del.disabled=false;}});
+$('#print').onclick=()=>window.print();
+$('#csv').onclick=()=>{const q=s=>'"'+String(s??'').replace(/"/g,'""')+'"';const rows=[['OKK Novi Pazar – pravdanje troškova',mode==='transfers'?'Uplate na moj račun':'Ostali rashodi'],['Datum','Izvod','Banka ID','Finansije ID','Namena','Iznos rashoda RSD','Dokumentovano RSD','Razlika RSD','Broj priloga','Status']];for(const p of payments){const documented=amountPaid(p);rows.push([p.datum,p.broj_izvoda,p.banka_id,p.finansije_id,p.namena_uplate,Number(p.iznos).toFixed(2),documented.toFixed(2),round(p.iznos-documented).toFixed(2),docsFor(p).length,label(p)[0]]);}rows.push([]);rows.push(['Priloženi računi']);rows.push(['Banka ID','Finansije ID','Naziv fajla','Opis','Iznos računa RSD','Datum dodavanja']);for(const p of payments)for(const d of docsFor(p))rows.push([p.banka_id,p.finansije_id,d.naziv_fajla,d.opis,d.iznos_racuna==null?'':Number(d.iznos_racuna).toFixed(2),d.datum_dodavanja]);const blob=new Blob(['\ufeff'+rows.map(r=>r.map(q).join(';')).join('\r\n')],{type:'text/csv;charset=utf-8'});const u=URL.createObjectURL(blob),a=document.createElement('a');a.href=u;a.download=mode==='transfers'?'OKK_Pravdanje_Prenetih_Sredstava.csv':'OKK_Pravdanje_Ostalih_Rashoda.csv';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),3000);};
+(async()=>{try{const {data:{user},error}=await db.auth.getUser();if(error||!user){notice('Potrebna je prijava. Najpre se prijavi na glavnoj stranici Club Managera, pa ponovo otvori ovu stranicu.',true);return;}await refresh(false);$('#app').hidden=false;$('#status').hidden=true;}catch(err){notice('Nije moguće učitati evidenciju: '+err.message+'. Proveri dozvole za pregled i tabelu priloga.',true);}})();
+</script>
+</body>
+</html>
