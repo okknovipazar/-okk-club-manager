@@ -1,0 +1,42 @@
+<!doctype html><html lang="sr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>OKK Novi Pazar · Posmatrač</title><meta name="theme-color" content="#081729"><link rel="icon" href="./icons/icon-192.png"><style>
+:root{color-scheme:dark}*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 10% 0%,#17406c,transparent 55%),#081729;color:#edf5ff;font:15px system-ui,-apple-system,Segoe UI,Arial}.shell{max-width:1050px;margin:auto;padding:20px 14px 80px}.top{display:flex;gap:14px;align-items:center;border-bottom:1px solid #385370;padding:5px 0 18px}.top img{width:64px;height:64px}.muted{color:#b5c8dc}.small{font-size:12px}.panel{margin:17px 0;padding:20px;border:1px solid #345575;background:linear-gradient(130deg,#15304f,#102139);border-radius:18px}.controls{display:flex;gap:8px;flex-wrap:wrap}.controls button{background:#1e3c5e;color:#f6faff;border:1px solid #3b628b}button{border:0;border-radius:11px;padding:11px 14px;min-height:44px;background:#68b4ff;color:#07182b;font:inherit;font-weight:750;cursor:pointer}button.active{background:#6cb8ff;color:#07182b}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.stat{padding:18px;background:#142e4a;border:1px solid #345475;border-radius:15px}.stat b{display:block;font-size:clamp(20px,4vw,28px);font-variant-numeric:tabular-nums;overflow-wrap:anywhere}.stat span{color:#a9c0d7;font-size:12px}.scroll{overflow-x:auto}table{width:100%;border-collapse:collapse;min-width:500px}td,th{text-align:left;padding:12px;border-bottom:1px solid #34516c}th{color:#b5d2ee;font-size:12px}.auth{max-width:460px;margin:30px auto}input{width:100%;padding:13px;border:1px solid #476c94;border-radius:11px;background:#081b30;color:#fff;font:inherit;margin:8px 0 14px}.error{color:#ffb1c1}a{color:#a9d5ff}[hidden]{display:none!important}@media(max-width:600px){.shell{padding:14px 12px 50px}.panel{padding:14px}.top img{width:52px;height:52px}.grid{gap:8px}.stat{padding:13px}}</style></head><body>
+<main class="shell"><div class="top"><img src="./icons/icon-192.png" alt="Grb OKK Novi Pazar"><div><strong>OKK NOVI PAZAR</strong><div class="muted small">CLUB MANAGER · POSMATRAČ</div></div></div>
+<section id="login" class="panel auth" hidden><h1>Prijava posmatrača</h1><p class="muted">Prijavi se nalogom za koji si dobio poziv od administratora.</p><form id="loginForm"><label>Mejl adresa<input name="email" type="email" autocomplete="username" required></label><label>Lozinka<input name="password" type="password" autocomplete="current-password" required></label><button type="submit">Prijavi se</button></form><p id="loginInfo" class="muted"></p></section>
+<section id="app" hidden><div class="panel"><h1>Pregled kluba</h1><p class="muted small">Pristup samo za čitanje. Vidiš isključivo oblasti koje ti je administrator odobrio.</p><div class="controls" id="tabs"></div><div class="controls" style="margin-top:12px"><button id="logout" type="button">Odjavi se</button></div></div><div class="panel" id="result">Učitavam podatke...</div></section>
+<div class="panel" id="status">Proveravam nalog...</div></main>
+<script type="module">
+import {createClient} from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
+const db=createClient('https://ysqdigsexbnssqmngyoe.supabase.co','sb_publishable_a8A4BStDplZrHyzxvJBtSw_pJCxk4s3');
+const $=q=>document.querySelector(q),esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const label={igraci:'Igrači',utakmice:'Utakmice',oprema:'Oprema',finansije:'Finansije',dugovanja:'Dugovanja',banka:'Banka'};
+const money=x=>Number(x||0).toLocaleString('sr-RS',{minimumFractionDigits:2,maximumFractionDigits:2})+' RSD';
+let selected='',allowed=[];
+const stat=(name,value)=>'<div class="stat"><b>'+esc(value)+'</b><span>'+esc(name)+'</span></div>';
+const table=(heads,items)=>'<div class="scroll"><table><thead><tr>'+heads.map(h=>'<th>'+esc(h)+'</th>').join('')+'</tr></thead><tbody>'+items.map(row=>'<tr>'+row.map(cell=>'<td>'+esc(cell??'—')+'</td>').join('')+'</tr>').join('')+'</tbody></table></div>';
+async function show(area){
+ if(!allowed.includes(area))return;selected=area;$('#tabs').querySelectorAll('button').forEach(b=>b.classList.toggle('active',b.dataset.area===area));$('#result').textContent='Učitavam '+label[area]+'...';
+ const {data,error}=await db.rpc('klub_posmatrac_pregled',{p_oblast:area});
+ if(error){$('#result').innerHTML='<p class="error">'+esc(error.message)+'</p>';return}
+ if(area==='igraci')$('#result').innerHTML='<h2>Igrači</h2>'+table(['Ime i prezime','Dres','Pozicija'],(data||[]).map(x=>[x.ime,x.broj,x.pozicija]));
+ else if(area==='utakmice')$('#result').innerHTML='<h2>Utakmice</h2>'+table(['Protivnik','Datum','Mesto','Rezultat'],(data||[]).map(x=>[x.protivnik,x.datum?new Date(x.datum).toLocaleDateString('sr-RS'):'—',x.mesto,(x.nasi_poeni??'—')+' : '+(x.protivnik_poeni??'—')]));
+ else if(area==='oprema')$('#result').innerHTML='<h2>Oprema</h2>'+table(['Naziv','Količina'],(data||[]).map(x=>[x.naziv,x.kolicina]));
+ else if(area==='finansije')$('#result').innerHTML='<h2>Finansijski pregled</h2><div class="grid">'+stat('Prihodi',money(data.prihodi))+stat('Rashodi',money(data.rashodi))+stat('Broj stavki',data.broj_stavki)+'</div>';
+ else if(area==='dugovanja')$('#result').innerHTML='<h2>Pregled dugovanja</h2><div class="grid">'+stat('Ukupna dugovanja',money(data.ukupno_dugovanje))+stat('Isplaćeno',money(data.isplaceno))+stat('Preostalo',money(Number(data.ukupno_dugovanje)-Number(data.isplaceno)))+'</div>';
+ else if(area==='banka')$('#result').innerHTML='<h2>Bankarski pregled</h2><div class="grid">'+stat('Prilivi',money(data.prilivi))+stat('Odlivi',money(data.odlivi))+stat('Broj stavki',data.broj_stavki)+'</div>';
+}
+async function start(){
+ const {data:{user}}=await db.auth.getUser();
+ $('#login').hidden=!!user;$('#app').hidden=!user;$('#status').hidden=true;
+ if(!user)return;
+ const {data,error}=await db.rpc('klub_posmatrac_dozvole');
+ if(error){$('#app').hidden=true;$('#status').hidden=false;$('#status').textContent='Greška provere dozvola: '+error.message;return}
+ allowed=data||[];
+ if(!allowed.length){$('#app').hidden=true;$('#status').hidden=false;$('#status').textContent='Nemaš aktivne dozvole posmatrača. Obrati se administratoru kluba.';return}
+ $('#tabs').innerHTML=allowed.map(a=>'<button type="button" data-area="'+esc(a)+'">'+label[a]+'</button>').join('');
+ await show(allowed[0]);
+}
+$('#tabs').addEventListener('click',e=>{const b=e.target.closest('[data-area]');if(b)show(b.dataset.area)});
+$('#logout').onclick=async()=>{await db.auth.signOut();location.reload()};
+$('#loginForm').addEventListener('submit',async e=>{e.preventDefault();const fd=new FormData(e.currentTarget);const {error}=await db.auth.signInWithPassword({email:String(fd.get('email')),password:String(fd.get('password'))});if(error){$('#loginInfo').textContent=error.message;$('#loginInfo').className='error';return}await start()});
+start();
+</script></body></html>
