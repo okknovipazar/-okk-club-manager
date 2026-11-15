@@ -30,7 +30,7 @@ $('#invite').addEventListener('submit',async e=>{
  if(!confirm('Poslati poziv na '+email+' sa izabranim pravima pregleda?'))return;
  btn.disabled=true; try{
  const {data,error}=await db.functions.invoke('pozovi-posmatraca',{body:{email,ime,oblasti}});
- if(error)throw Error(data?.error||error.message);
+ if(error){let message=data?.error||error.message;if(error.context?.json){try{const details=await error.context.json();message=details?.error||message}catch{}}throw Error(message)}
  if(!data?.success)throw Error(data?.error||'Slanje nije potvrđeno');
  msg('Poziv je poslat na '+email+'.');form.reset();await refresh();
  }catch(err){msg('Poziv nije potvrđen: '+err.message,true)}finally{btn.disabled=false}
