@@ -1,0 +1,38 @@
+name: Update Club Manager icons
+on:
+  push:
+    paths:
+      - .github/workflows/update-club-icons.yml
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  update-icons:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download club crest and make Android icons
+        run: |
+          python -m pip install --quiet pillow requests
+          python - <<'PY'
+          from PIL import Image
+          from io import BytesIO
+          import requests, os
+          url = "https://api.rkscs.rs/uploads/clubs/okk-novi-pazar.png"
+          resp = requests.get(url, timeout=30)
+          resp.raise_for_status()
+          source = Image.open(BytesIO(resp.content)).convert("RGBA")
+          os.makedirs("icons", exist_ok=True)
+          for size in (192, 512):
+              canvas = Image.new("RGBA", (size, size), (0, 0, 0, 0))
+              pad = round(size * .07)
+              logo = source.resize((size - 2 * pad, size - 2 * pad), Image.Resampling.LANCZOS)
+              canvas.alpha_composite(logo, (pad, pad))
+              canvas.save(f"icons/icon-{size}.png")
+          PY
+      - name: Commit icons
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add icons/icon-192.png icons/icon-512.png
+          git diff --cached --quiet || (git commit -m "Replace generic app icons with club crest" && git push)
