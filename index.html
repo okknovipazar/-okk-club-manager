@@ -12,8 +12,30 @@
 </head><body>
 <header><div class="brand">OKK NOVI PAZAR <small>CLUB MANAGER · NOVI IZGLED 3 · ZAŠTIĆENI PRISTUP</small></div><div id="account" class="muted"></div></header>
 <div class="shell"><section id="login" class="panel login"><h1>Prijava administratora</h1><p>Prijavi se Supabase mejlom i lozinkom koju si napravio za aplikaciju.</p><form id="loginForm"><label for="email">Mejl adresa</label><input id="email" type="email" autocomplete="username" required><label for="password">Lozinka</label><input id="password" type="password" autocomplete="current-password" required><div class="row"><button id="signIn" type="submit">Prijavi se</button></div></form><div id="loginMsg" class="status hidden" role="status"></div><p class="foot">Nalog se kreira u Supabase Authentication. Ova stranica ne registruje nove korisnike.</p></section>
-<section id="workspace" class="hidden"><div class="toolbar"><div><h1 id="heading">Kontrolna tabla</h1><div class="muted">Podaci se čuvaju u Supabase bazi.</div></div>
-<a href="./izvestaji.html"
+<section id="workspace" class="hidden"><div class="toolbar"><div><h1 id="heading">Kontrolna tabla</h1><div class="muted">Pregled ekipe i klupskih finansija.</div></div>
+
+
+
+ 
+
+ 
+
+ 
+
+
+
+
+ 
+
+
+
+
+ 
+
+
+
+
+</div><nav class="nav" id="nav"></nav><div id="notice" class="status hidden" role="status"></div><div id="content"></div><details id="clubModules" class="panel club-modules"><summary><span><strong>Moduli kluba</strong><small>Finansije, igrači, evidencije i izveštaji</small></span><span class="module-toggle">Otvori meni</span></summary><div class="club-modules-grid"><a href="./izvestaji.html"
    style="display:inline-block;
    padding:11px 15px;
    border-radius:10px;
@@ -43,7 +65,6 @@
    text-decoration:none">
   💵 Blagajna
 </a>
- 
 <a href="./banka.html"
    style="display:inline-block;
    padding:11px 15px;
@@ -54,7 +75,6 @@
    text-decoration:none">
   🏦 Banka i izvodi
 </a>
- 
 <a href="./finansijski-pregled.html"
    style="display:inline-block;
    padding:11px 15px;
@@ -65,7 +85,6 @@
    text-decoration:none">
   📊 Finansijski pregled
 </a>
- 
 <a href="./pravdanje-troskova.html"
    style="display:inline-block;
    padding:11px 15px;
@@ -76,10 +95,6 @@
    text-decoration:none">
   📋 Pravdanje troškova
 </a>
-
-
-
- 
 <a href="./knjiga-blagajne.html"
    style="display:inline-block;
    padding:11px 15px;
@@ -90,8 +105,6 @@
    text-decoration:none">
   📖 Knjiga blagajne
 </a>
-
-
 <a href="./honorari.html"
    style="display:inline-block;
    padding:11px 15px;
@@ -102,18 +115,13 @@
    text-decoration:none">
   💰 Honorari i isplate
 </a>
- 
 <a href="./Club_Manager_Prihodi_i_potrazivanja.html"
    style="display:inline-block;padding:11px 15px;
    border-radius:10px;background:#55d8ad;
    color:#081729;font-weight:800;
    text-decoration:none">
   💰 Prihodi i potraživanja
-</a>
-
-
-
-<button id="signOut" class="secondary">Odjavi se</button></div><nav class="nav" id="nav"></nav><div id="notice" class="status hidden" role="status"></div><div id="content"></div><p class="foot">OKK Novi Pazar · Pristup ograničen pravilima baze podataka (RLS). Ne unositi osetljive dokumente dok se bezbednost ne proveri.</p></section></div>
+</a></div><div class="module-exit"><button id="signOut" class="secondary">Odjavi se</button></div></details><p class="foot">OKK Novi Pazar · Pristup ograničen pravilima baze podataka (RLS). Ne unositi osetljive dokumente dok se bezbednost ne proveri.</p></section></div>
 <dialog id="editor"><h2 id="editorTitle">Novi unos</h2><form id="entryForm"><div id="formFields" class="formgrid"></div><div class="row"><button type="button" class="secondary" id="cancel">Otkaži</button><button type="submit" id="save">Sačuvaj</button></div></form></dialog>
 <dialog id="debtDialog"><h2>Novo dugovanje</h2><form id="debtForm"><label>Poverilac (igrač, trener, dobavljač...)</label><input name="poverilac" required maxlength="150"><label>Sezona</label><select name="sezona" id="debtSeason"><option>2026/27</option><option>2025/26</option><option>2024/25</option><option>2023/24</option><option>Starija dugovanja</option></select><label>Osnov duga</label><select name="osnov"><option>Plata / honorar</option><option>Prevoz</option><option>Smeštaj</option><option>Oprema</option><option>Pozajmica</option><option>Ostalo</option></select><label>Početni dug (RSD)</label><input name="pocetni_dug" type="number" min="0.01" step="0.01" required><label>Napomena</label><input name="napomena"><p class="help">Početni iznos se ne prepisuje. Unesite dug koji nije ranije zaveden u ovoj evidenciji.</p><div class="row"><button type="button" class="secondary" data-close="debtDialog">Otkaži</button><button type="submit">Sačuvaj dug</button></div></form></dialog>
 <dialog id="paymentDialog"><h2>Nova isplata duga</h2><div class="muted" id="paymentContext"></div><form id="paymentForm"><label>Datum isplate</label><input name="datum" type="date" required><label>Isplaćeno (RSD)</label><input name="iznos" type="number" min="0.01" step="0.01" required><label>Napomena / način plaćanja</label><input name="napomena" placeholder="Npr. uplata preko računa"><p class="help">Isplata se trajno beleži, smanjuje dug i automatski dodaje rashod u Finansije. Ne unosite isti rashod ručno.</p><div class="row"><button type="button" class="secondary" data-close="paymentDialog">Otkaži</button><button type="submit">Evidentiraj isplatu</button></div></form></dialog>
