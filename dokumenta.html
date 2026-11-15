@@ -2,7 +2,7 @@
 <html lang="sr">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>OKK Novi Pazar · Dokumentacija V4.3</title>
 <style>
 :root{color-scheme:dark;--bg:#081729;--panel:#11243e;--border:#2a4769;--muted:#a9bdd3;--text:#f2f8ff;--accent:#4b9eff}
@@ -17,6 +17,12 @@ button:disabled{opacity:.6;cursor:wait}.grid{display:grid;grid-template-columns:
 .file small{color:var(--muted)}.file-actions{display:flex;gap:8px;flex-wrap:wrap}.danger{background:#a83a50;color:white}#status{white-space:pre-wrap}
 @media(max-width:620px){.grid{grid-template-columns:1fr}}
 </style>
+
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="apple-touch-icon" href="./icons/icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<link rel="stylesheet" href="./mobile.css">
+<script src="./pwa.js" defer></script>
 </head>
 <body>
 <header><div><strong>◈ OKK NOVI PAZAR</strong><div class="muted">BLAGAJNA · RAČUNI I FAKTURE · V4.3</div></div><a href="./blagajna.html">← Nazad u blagajnu</a></header>

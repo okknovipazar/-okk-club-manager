@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="sr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>OKK Novi Pazar · Blagajna V4.3</title>
+<html lang="sr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>OKK Novi Pazar · Blagajna V4.3</title>
 <style>
 :root{color-scheme:dark;--bg:#081729;--p:#11243e;--ink:#f1f7ff;--muted:#afc2d8;--border:#294a6c;--blue:#4b9eff;--green:#49d5a2;--red:#ff8496}*{box-sizing:border-box}[hidden]{display:none!important}
 body{margin:0;background:linear-gradient(140deg,#0d2b4e,#081729 48%);font:15px system-ui,Arial;color:var(--ink);min-height:100vh}
@@ -10,7 +10,13 @@ a{color:#9acbff}main{max-width:1140px;padding:18px 15px 60px;margin:auto}h1{font
 button,.btn{background:var(--blue);color:#081729;font-weight:750;padding:11px 15px;border:0;border-radius:9px;cursor:pointer;text-decoration:none;display:inline-block;font:inherit;font-weight:700}button.secondary{background:#264967;color:#fff}button.danger{background:#5c293c;color:#fff}button:disabled{opacity:.5}.toolbar{display:flex;align-items:end;gap:12px;flex-wrap:wrap;justify-content:space-between}.toolbar>*{min-width:130px}table{border-collapse:collapse;width:100%;min-width:730px}th,td{padding:11px 10px;border-bottom:1px solid #35516f;text-align:left;font-size:13px;vertical-align:top}.table{overflow:auto}.notice{border:1px solid #6c86a2;border-radius:9px;padding:12px;margin:12px 0}.error{border-color:#ab5573;color:#ffc4cf}.positive{color:var(--green)}.negative{color:var(--red)}.actions{display:flex;gap:7px;flex-wrap:wrap}.actions .btn,.actions button{font-size:13px;padding:8px 10px}
 @media(max-width:760px){.cards{grid-template-columns:repeat(2,minmax(0,1fr))}.form{grid-template-columns:1fr}.wide{grid-column:span 1}}
 @media print{body{background:#fff;color:#111;font-size:11px}.panel,.stat{background:#fff;color:#111;border:1px solid #bbb;break-inside:avoid}header,.noprint,.form{display:none!important}.small,.stat span{color:#444}.cards{grid-template-columns:repeat(4,1fr)}table{min-width:0}a{color:#111}}
-</style></head><body>
+</style>
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="apple-touch-icon" href="./icons/icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<link rel="stylesheet" href="./mobile.css">
+<script src="./pwa.js" defer></script>
+</head><body>
 <header><div><strong>◈ OKK NOVI PAZAR</strong><div class="small">CLUB MANAGER · BLAGAJNA V4.3</div></div><a href="./index.html">← Glavna kontrolna tabla</a></header>
 <main><h1>Blagajna kluba</h1><p class="small">Praćenje gotovine. Povezani rashodi i prihodi ostaju knjiženi samo jednom u Finansijama.</p>
 <div class="noprint" style="margin:16px 0"><a class="btn" href="./dokumenta.html">📎 Računi i fakture</a></div>

@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="sr">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>OKK Novi Pazar · Jedinstveni finansijski pregled V5.1</title>
 <style>
 :root{color-scheme:dark;--bg:#081729;--panel:#102640;--border:#315271;--text:#f2f7ff;--muted:#b9cce0;--blue:#4b9eff;--green:#49d5a2;--red:#ff8496}
@@ -10,6 +10,12 @@
 @page{size:A4 landscape;margin:12mm}
 @media print{:root{color-scheme:light}body{background:white;color:black;font:11px Arial}header,.noprint{display:none!important}main{max-width:none;padding:0}.panel{background:white;color:black;border:1px solid #bbb;break-inside:avoid;padding:10px;margin:9px 0}.card{background:white;border:1px solid #ccc;color:black;padding:8px}.card span,.card small,.muted{color:#333}.card b{font-size:17px}.cards{gap:5px}table{min-width:0}td,th{font-size:9px;padding:5px}.scroll{overflow:visible}.signatures{margin-top:38px}h1{font-size:20px}h2{font-size:14px}a{color:black;text-decoration:none}}
 </style>
+
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="apple-touch-icon" href="./icons/icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<link rel="stylesheet" href="./mobile.css">
+<script src="./pwa.js" defer></script>
 </head>
 <body>
 <header><div><strong>◈ OKK NOVI PAZAR</strong><div class="muted small">CLUB MANAGER · FINANSIJSKI PREGLED V5.1</div></div><div><a href="./index.html">← Kontrolna tabla</a> · <a href="./banka.html">Banka</a> · <a href="./knjiga-blagajne.html">Blagajna</a></div></header>

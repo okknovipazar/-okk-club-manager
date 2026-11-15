@@ -2,7 +2,7 @@
 <html lang="sr">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#081729">
 <title>OKK Novi Pazar · Pravdanje troškova</title>
 <style>
@@ -11,6 +11,12 @@
 @media(max-width:850px){.cards{grid-template-columns:repeat(2,minmax(0,1fr))}.detail-grid{grid-template-columns:1fr}}@media(max-width:560px){.cards{grid-template-columns:1fr 1fr}.card b{font-size:20px}}
 @page{size:A4 landscape;margin:12mm}@media print{:root{color-scheme:light}body{background:white!important;color:black;font:11px Arial}header,.noprint,#status{display:none!important}main{max-width:none;padding:0}.panel{background:white;color:black;border:0;margin:7px 0;padding:4px}.card,.subpanel{background:white;color:black;border:1px solid #999}.card small,.muted,.help,.receipt small{color:#333}.cards{gap:6px}.card b{font-size:18px}table{min-width:0}th,td{color:black;font-size:9px;padding:6px;border-bottom:1px solid #aaa}h1{font-size:21px}h2{font-size:15px}.pill{color:black!important;border-color:#777}.detail-grid{grid-template-columns:1fr 1fr}#detail{break-inside:avoid}}
 </style>
+
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="apple-touch-icon" href="./icons/icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<link rel="stylesheet" href="./mobile.css">
+<script src="./pwa.js" defer></script>
 </head>
 <body>
 <header><div><b>◈ OKK NOVI PAZAR</b><div class="muted small">CLUB MANAGER · PRAVDANJE TROŠKOVA</div></div><nav><a href="./index.html">Početna</a> · <a href="./finansijski-pregled.html">Finansijski pregled</a> · <a href="./dokumenta.html">Sva dokumenta</a> · <a href="./knjiga-blagajne.html">Knjiga blagajne</a></nav></header>

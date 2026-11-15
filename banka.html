@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="sr">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>OKK Novi Pazar · Banka i izvodi V5.0</title>
 <style>
 :root{color-scheme:dark;--bg:#081729;--panel:#11243e;--border:#345372;--muted:#b1c5d9;--text:#f5f9ff;--blue:#4b9eff;--green:#58dab0;--red:#ff9eb0}
@@ -12,6 +12,12 @@ header{padding:18px max(15px,calc((100vw - 1100px)/2));display:flex;align-items:
 @media(max-width:750px){.grid{grid-template-columns:1fr}.wide,.two{grid-column:auto}.cards{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @page{size:A4 landscape;margin:12mm}@media print{:root{color-scheme:light}body{color:black;background:white;font:11px Arial}header,.noprint{display:none!important}main{max-width:none;padding:0}.panel{background:white;border:0;padding:0;margin:9px 0}.cards{grid-template-columns:repeat(4,1fr)}.card{background:white;color:black;border:1px solid #888;border-radius:0}.card span,.muted{color:#333}table{min-width:0}td,th{color:black;font-size:9px;padding:5px 4px;border-color:#999}.scroll{overflow:visible}.in,.out{color:black}h1{font-size:19px}h2{font-size:15px}}
 </style>
+
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="apple-touch-icon" href="./icons/icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<link rel="stylesheet" href="./mobile.css">
+<script src="./pwa.js" defer></script>
 </head>
 <body>
 <header><div><strong>◈ OKK NOVI PAZAR</strong><div class="muted small">CLUB MANAGER · BANKA I IZVODI V5.0</div></div><div><a href="./index.html">← Kontrolna tabla</a> · <a href="./blagajna.html">Blagajna</a></div></header>
