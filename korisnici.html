@@ -1,0 +1,48 @@
+<!doctype html><html lang="sr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>OKK Novi Pazar · Korisnici i dozvole</title><link rel="icon" href="./icons/icon-192.png"><link rel="stylesheet" href="./modern.css?v=5">
+<style>body{margin:0;color:#edf5ff;font:15px system-ui;background:#081729}.page{max-width:980px;margin:auto;padding:20px 14px 80px}.head{display:flex;align-items:center;gap:12px;margin-bottom:22px}.head img{width:57px;height:57px}.panel{padding:20px;margin:16px 0}.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.perms{display:flex;gap:9px 15px;flex-wrap:wrap;margin:14px 0}.perms label{display:flex;gap:7px;align-items:center;background:#1c3756;padding:10px;border-radius:10px;font-size:13px}.perms input{width:auto;min-height:auto}input[type=text],input[type=email]{width:100%;padding:12px}button{min-height:43px;cursor:pointer}a{color:#a9d3ff}.list{display:grid;gap:12px}.item{background:#132e4b;padding:16px;border:1px solid #395978;border-radius:14px}.item h3{margin:0 0 6px;overflow-wrap:anywhere}.actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}.note{color:#b5c8da;font-size:13px;line-height:1.5}.err{color:#ffabbc}.ok{color:#55dfb6}[hidden]{display:none!important}@media(max-width:650px){.grid{grid-template-columns:1fr}.panel{padding:15px}.perms{gap:6px}.head img{width:48px;height:48px}}</style></head>
+<body><main class="page"><div class="head"><img src="./icons/icon-192.png" alt="Grb kluba"><div><strong>OKK NOVI PAZAR</strong><div class="note">Administracija · Korisnici i dozvole</div></div></div><a href="./index.html">← Kontrolna tabla</a>
+<h1>Korisnici – posmatrači</h1><p class="note">Samo administrator poziva nove korisnike. Posmatrači ne mogu menjati podatke; finansije, dugovanja i banka prikazuju samo ukupne iznose.</p><div id="state" class="panel">Proveravam administratorski nalog...</div>
+<div id="app" hidden>
+<section class="panel"><h2>Pozovi novog posmatrača</h2><form id="invite"><div class="grid"><label>Ime i prezime<input type="text" name="ime" maxlength="100" placeholder="Ime korisnika"></label><label>Mejl adresa<input type="email" name="email" required placeholder="korisnik@gmail.com"></label></div><p class="note">Izaberi šta sme da vidi:</p><div class="perms" id="newPerms"></div><button type="submit" id="inviteBtn">Pošalji poziv</button></form><p class="note">Pozvani korisnik dobija mejl za postavljanje naloga. Pravo pristupa možeš u svakom trenutku isključiti.</p></section>
+<section class="panel"><h2>Postojeći posmatrači</h2><div class="list" id="users"></div></section>
+</div></main>
+<script type="module">
+import {createClient} from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
+const db=createClient('https://ysqdigsexbnssqmngyoe.supabase.co','sb_publishable_a8A4BStDplZrHyzxvJBtSw_pJCxk4s3');
+const ADMIN='903ffa8b-77d4-4592-8cee-c955ce246e59';
+const areas={igraci:'Igrači',utakmice:'Utakmice',oprema:'Oprema',finansije:'Finansije – zbirno',dugovanja:'Dugovanja – zbirno',banka:'Banka – zbirno'};
+const $=s=>document.querySelector(s);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const perms=(selected=[],prefix='area')=>Object.entries(areas).map(([key,label])=>'<label><input type="checkbox" name="'+prefix+'" value="'+key+'" '+(selected.includes(key)?'checked':'')+'>'+label+'</label>').join('');
+let users=[];
+function msg(t,error=false){$('#state').hidden=false;$('#state').textContent=t;$('#state').className='panel '+(error?'err':'ok')}
+async function refresh(){
+ const {data,error}=await db.from('klub_posmatraci').select('email,ime,oblasti,aktivan,dodat').order('dodat',{ascending:false});
+ if(error){msg('Greška učitavanja: '+error.message,true);return}
+ users=data||[];
+ $('#users').innerHTML=users.length?users.map((u,i)=>'<div class="item" data-index="'+i+'"><h3>'+esc(u.ime||u.email)+'</h3><div class="note">'+esc(u.email)+' · '+(u.aktivan?'Aktivan':'Pristup isključen')+'</div><div class="perms">'+perms(u.oblasti,'existing')+'</div><div class="actions"><button type="button" data-save="'+i+'">Sačuvaj dozvole</button><button type="button" class="secondary" data-toggle="'+i+'">'+(u.aktivan?'Isključi pristup':'Uključi pristup')+'</button></div></div>').join(''):'<p class="note">Još nema dodatih posmatrača.</p>';
+}
+$('#newPerms').innerHTML=perms(['igraci','utakmice']);
+$('#invite').addEventListener('submit',async e=>{
+ e.preventDefault(); const form=e.currentTarget,btn=$('#inviteBtn');const email=form.elements.email.value.toLowerCase().trim();const ime=form.elements.ime.value.trim();const oblasti=[...form.querySelectorAll('input[name=area]:checked')].map(x=>x.value);
+ if(!oblasti.length){msg('Izaberi bar jednu oblast.',true);return}
+ if(!confirm('Poslati poziv na '+email+' sa izabranim pravima pregleda?'))return;
+ btn.disabled=true; try{
+ const {data,error}=await db.functions.invoke('pozovi-posmatraca',{body:{email,ime,oblasti}});
+ if(error)throw Error(data?.error||error.message);
+ if(!data?.success)throw Error(data?.error||'Slanje nije potvrđeno');
+ msg('Poziv je poslat na '+email+'.');form.reset();await refresh();
+ }catch(err){msg('Poziv nije potvrđen: '+err.message,true)}finally{btn.disabled=false}
+});
+document.addEventListener('click',async e=>{
+ const save=e.target.closest('[data-save]'),toggle=e.target.closest('[data-toggle]');if(!save&&!toggle)return;
+ const i=Number((save||toggle).dataset[save?'save':'toggle']);const u=users[i];if(!u)return;
+ const item=document.querySelector('[data-index="'+i+'"]');const btn=save||toggle;
+ const update=save?{oblasti:[...item.querySelectorAll('input[name=existing]:checked')].map(x=>x.value)}:{aktivan:!u.aktivan};
+ if(save&&!update.oblasti.length){msg('Izaberi bar jednu oblast ili isključi pristup.',true);return}
+ if(toggle&&!confirm((u.aktivan?'Isključiti':'Uključiti')+' pristup korisniku '+u.email+'?'))return;
+ btn.disabled=true;try{const {data,error}=await db.from('klub_posmatraci').update(update).eq('email',u.email).select('email');if(error||!data?.length)throw Error(error?.message||'Promena nije potvrđena');msg('Dozvole su sačuvane.');await refresh()}catch(err){msg('Greška: '+err.message,true)}finally{btn.disabled=false}
+});
+(async()=>{const {data:{user},error}=await db.auth.getUser();if(error||!user||user.id!==ADMIN){msg('Ovu stranicu može koristiti samo administrator. Prijavi se preko Club Managera.',true);return}$('#app').hidden=false;$('#state').hidden=true;await refresh()})();
+</script></body></html>
