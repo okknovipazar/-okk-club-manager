@@ -123,3 +123,6 @@ body>header #account{color:#a7bdd4}
  .nav button{min-width:0;width:100%;min-height:46px;white-space:normal;line-height:1.2;text-align:center;padding:10px 5px;font-size:12px;border-radius:12px}
 }
 @media(max-width:355px){.nav{gap:6px}.nav button{font-size:11px;padding:9px 3px}body>header .brand{font-size:14px}}
+
+.module-exit .admin-users-link{display:flex;align-items:center;justify-content:center;min-height:45px;margin-bottom:10px;border:1px solid #4d78a6;border-radius:12px;background:#1a3f64;color:#e9f6ff;text-decoration:none;font-weight:750;font-size:14px}
+.module-exit .admin-users-link:focus-visible{outline:2px solid #9ad0ff;outline-offset:3px}
