@@ -7,7 +7,7 @@
 <link rel="apple-touch-icon" href="./icons/icon-192.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <link rel="stylesheet" href="./mobile.css">
-<link rel="stylesheet" href="./modern.css?v=5">
+<link rel="stylesheet" href="./modern.css?v=6">
 <script src="./pwa.js" defer></script>
 </head><body>
 <header><div class="brand">OKK NOVI PAZAR <small>CLUB MANAGER · ZAŠTIĆENI PRISTUP</small></div><div id="account" class="muted"></div></header>
@@ -121,7 +121,7 @@
    color:#081729;font-weight:800;
    text-decoration:none">
   💰 Prihodi i potraživanja
-</a></div><div class="module-exit"><button id="signOut" class="secondary">Odjavi se</button></div></details><p class="foot">OKK Novi Pazar · Pristup ograničen pravilima baze podataka (RLS). Ne unositi osetljive dokumente dok se bezbednost ne proveri.</p></section></div>
+</a></div><div class="module-exit"><a class="admin-users-link" href="./korisnici.html">👥 Korisnici i dozvole</a><button id="signOut" class="secondary">Odjavi se</button></div></details><p class="foot">OKK Novi Pazar · Pristup ograničen pravilima baze podataka (RLS). Ne unositi osetljive dokumente dok se bezbednost ne proveri.</p></section></div>
 <dialog id="editor"><h2 id="editorTitle">Novi unos</h2><form id="entryForm"><div id="formFields" class="formgrid"></div><div class="row"><button type="button" class="secondary" id="cancel">Otkaži</button><button type="submit" id="save">Sačuvaj</button></div></form></dialog>
 <dialog id="debtDialog"><h2>Novo dugovanje</h2><form id="debtForm"><label>Poverilac (igrač, trener, dobavljač...)</label><input name="poverilac" required maxlength="150"><label>Sezona</label><select name="sezona" id="debtSeason"><option>2026/27</option><option>2025/26</option><option>2024/25</option><option>2023/24</option><option>Starija dugovanja</option></select><label>Osnov duga</label><select name="osnov"><option>Plata / honorar</option><option>Prevoz</option><option>Smeštaj</option><option>Oprema</option><option>Pozajmica</option><option>Ostalo</option></select><label>Početni dug (RSD)</label><input name="pocetni_dug" type="number" min="0.01" step="0.01" required><label>Napomena</label><input name="napomena"><p class="help">Početni iznos se ne prepisuje. Unesite dug koji nije ranije zaveden u ovoj evidenciji.</p><div class="row"><button type="button" class="secondary" data-close="debtDialog">Otkaži</button><button type="submit">Sačuvaj dug</button></div></form></dialog>
 <dialog id="paymentDialog"><h2>Nova isplata duga</h2><div class="muted" id="paymentContext"></div><form id="paymentForm"><label>Datum isplate</label><input name="datum" type="date" required><label>Isplaćeno (RSD)</label><input name="iznos" type="number" min="0.01" step="0.01" required><label>Napomena / način plaćanja</label><input name="napomena" placeholder="Npr. uplata preko računa"><p class="help">Isplata se trajno beleži, smanjuje dug i automatski dodaje rashod u Finansije. Ne unosite isti rashod ručno.</p><div class="row"><button type="button" class="secondary" data-close="paymentDialog">Otkaži</button><button type="submit">Evidentiraj isplatu</button></div></form></dialog>
