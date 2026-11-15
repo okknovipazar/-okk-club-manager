@@ -79,3 +79,31 @@ body>header #account{min-width:0;max-width:100%;overflow-wrap:anywhere;font-size
  #workspace>.toolbar>a{min-width:0;min-height:52px;font-size:11px;padding:7px 5px!important;line-height:1.3;word-break:normal;scroll-snap-align:none}
  #workspace>.toolbar>#signOut{grid-column:1/-1;min-height:40px}
 }
+
+/* Modules moved beneath overview content */
+#workspace>.toolbar{display:block;margin-bottom:10px}
+#workspace>.toolbar>div:first-child{padding:0}
+#workspace>.toolbar .muted{font-size:13px}
+.club-modules{margin-top:20px;padding:0;overflow:hidden}
+.club-modules>summary{list-style:none;display:flex;justify-content:space-between;align-items:center;gap:12px;padding:19px 22px;cursor:pointer;user-select:none}
+.club-modules>summary::-webkit-details-marker{display:none}
+.club-modules>summary strong{display:block;font-size:19px;color:#f3f8ff}
+.club-modules>summary small{display:block;margin-top:5px;font-size:12px;color:#a9c0d9}
+.module-toggle{display:inline-flex;align-items:center;justify-content:center;flex:none;padding:9px 12px;border-radius:10px;color:#c4e5ff;font-weight:700;font-size:12px;background:#1b3c5f;border:1px solid #3a6289}
+.club-modules[open] .module-toggle{font-size:0}
+.club-modules[open] .module-toggle::after{content:"Zatvori meni";font-size:12px}
+.club-modules-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:11px;padding:0 20px 18px}
+.club-modules-grid>a{display:flex!important;align-items:center;justify-content:center;text-align:center;min-height:66px;padding:12px!important;border-radius:13px!important;background:#193756!important;border:1px solid #3d638a;color:#ecf6ff!important;text-decoration:none;font-size:13px;font-weight:750;line-height:1.4}
+.club-modules-grid>a[href*="izvestaji"],.club-modules-grid>a[href*="finansijski"]{background:#153b4a!important;border-color:#327e82}
+.club-modules-grid>a[href*="pravdanje"],.club-modules-grid>a[href*="honorari"]{background:#48371f!important;border-color:#9c7748}
+.module-exit{border-top:1px solid #2a4664;padding:12px 20px 20px}
+.module-exit #signOut{width:100%;min-height:43px;margin:0}
+@media(max-width:800px){
+ #workspace>.toolbar{display:block;overflow:visible;margin:0 0 12px;padding:0}
+ #workspace>.toolbar>div:first-child{display:block}
+ .club-modules{margin-top:16px}
+ .club-modules>summary{padding:16px}
+ .club-modules-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;padding:0 12px 14px}
+ .club-modules-grid>a{font-size:12px;padding:10px 7px!important;min-height:60px}
+ .module-exit{padding:10px 12px 15px}
+}
