@@ -21,7 +21,7 @@ async function refresh(){
  const {data,error}=await db.from('klub_posmatraci').select('email,ime,oblasti,aktivan,dodat').order('dodat',{ascending:false});
  if(error){msg('Greška učitavanja: '+error.message,true);return}
  users=data||[];
- $('#users').innerHTML=users.length?users.map((u,i)=>'<div class="item" data-index="'+i+'"><h3>'+esc(u.ime||u.email)+'</h3><div class="note">'+esc(u.email)+' · '+(u.aktivan?'Aktivan':'Pristup isključen')+'</div><div class="perms">'+perms(u.oblasti,'existing')+'</div><div class="actions"><button type="button" data-save="'+i+'">Sačuvaj dozvole</button><button type="button" class="secondary" data-toggle="'+i+'">'+(u.aktivan?'Isključi pristup':'Uključi pristup')+'</button></div></div>').join(''):'<p class="note">Još nema dodatih posmatrača.</p>';
+ $('#users').innerHTML=users.length?users.map((u,i)=>'<div class="item" data-index="'+i+'"><h3>'+esc(u.ime||u.email)+'</h3><div class="note">'+esc(u.email)+' · '+(u.aktivan?'Aktivan':'Pristup isključen')+'</div><div class="perms">'+perms(u.oblasti,'existing')+'</div><div class="actions"><button type="button" data-save="'+i+'">Sačuvaj dozvole</button><button type="button" class="secondary" data-resend="'+i+'">Pošalji novi link</button><button type="button" class="secondary" data-toggle="'+i+'">'+(u.aktivan?'Isključi pristup':'Uključi pristup')+'</button></div></div>').join(''):'<p class="note">Još nema dodatih posmatrača.</p>';
 }
 $('#newPerms').innerHTML=perms(['igraci','utakmice']);
 $('#invite').addEventListener('submit',async e=>{
@@ -36,9 +36,19 @@ $('#invite').addEventListener('submit',async e=>{
  }catch(err){msg('Poziv nije potvrđen: '+err.message,true)}finally{btn.disabled=false}
 });
 document.addEventListener('click',async e=>{
- const save=e.target.closest('[data-save]'),toggle=e.target.closest('[data-toggle]');if(!save&&!toggle)return;
- const i=Number((save||toggle).dataset[save?'save':'toggle']);const u=users[i];if(!u)return;
- const item=document.querySelector('[data-index="'+i+'"]');const btn=save||toggle;
+ const save=e.target.closest('[data-save]'),toggle=e.target.closest('[data-toggle]'),resend=e.target.closest('[data-resend]');if(!save&&!toggle&&!resend)return;
+ const i=Number((save||toggle||resend).dataset[save?'save':toggle?'toggle':'resend']);const u=users[i];if(!u)return;
+ const item=document.querySelector('[data-index="'+i+'"]');const btn=save||toggle||resend;
+ if(resend){
+  if(!confirm('Poslati novi link za postavljanje lozinke na '+u.email+'?'))return;
+  btn.disabled=true;
+  try{const {data,error}=await db.functions.invoke('pozovi-posmatraca',{body:{action:'resend',email:u.email,ime:u.ime,oblasti:u.oblasti}});
+  if(error){let message=error.message;if(error.context?.json){try{const info=await error.context.json();message=info.error||message}catch{}}throw Error(message)}
+  if(!data?.success)throw Error(data?.error||'Nije potvrđeno slanje');
+  msg('Novi link je poslat na '+u.email);
+  }catch(err){msg('Slanje nije uspelo: '+err.message,true)}finally{btn.disabled=false}
+  return;
+ }
  const update=save?{oblasti:[...item.querySelectorAll('input[name=existing]:checked')].map(x=>x.value)}:{aktivan:!u.aktivan};
  if(save&&!update.oblasti.length){msg('Izaberi bar jednu oblast ili isključi pristup.',true);return}
  if(toggle&&!confirm((u.aktivan?'Isključiti':'Uključiti')+' pristup korisniku '+u.email+'?'))return;
