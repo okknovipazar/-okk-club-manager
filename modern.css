@@ -1,0 +1,53 @@
+/* Club Manager visual refresh – presentation only, no changes to data or authentication */
+:root{--bg:#071321;--panel:#10233b;--border:#2a405e;--ink:#f6f9ff;--muted:#a7b9ce;--blue:#62adff;--green:#4be0ad;--red:#ff8299;color-scheme:dark}
+html{scroll-behavior:smooth}body{font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;background:radial-gradient(ellipse 80% 440px at 15% 0%,#1a416c 0%,transparent 75%),linear-gradient(155deg,#0b1c30,#071321 64%);letter-spacing:-.01em}
+body>header{position:relative;padding:17px max(22px,calc((100vw - 1200px)/2));background:rgba(9,25,44,.88);border-bottom:1px solid #355070;box-shadow:0 10px 30px #0002;backdrop-filter:blur(16px)}
+.brand{display:flex;align-items:center;gap:13px;font-size:17px;line-height:1.25;letter-spacing:.035em}
+.brand::before{content:"";display:block;width:51px;height:51px;flex:none;background:url("./icons/icon-192.png") center/contain no-repeat;filter:drop-shadow(0 2px 8px #0006)}
+.brand small{margin-top:5px;font-size:10px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:#8db5de}
+.shell{max-width:1200px;padding-top:28px}
+h1{font-size:clamp(24px,3vw,32px);letter-spacing:-.045em;font-weight:800}h2{font-size:19px;letter-spacing:-.025em}
+.panel,.stat,.detail{background:linear-gradient(150deg,rgba(25,49,78,.95),rgba(14,33,56,.98));border:1px solid rgba(126,162,202,.20);box-shadow:0 12px 35px #0003}
+.panel{border-radius:21px;padding:24px}.stat{position:relative;border-radius:18px;padding:20px;min-height:112px;overflow:hidden;transition:transform .2s,border-color .2s}.stat::before{content:"";position:absolute;left:18px;top:0;height:3px;width:48px;border-radius:0 0 10px 10px;background:linear-gradient(90deg,#4f9cfa,#53dec0)}
+.stat b{margin:9px 0 5px;font-size:clamp(22px,2.6vw,32px);font-weight:800;letter-spacing:-.04em;font-variant-numeric:tabular-nums}.stat span{color:#b4c7dc;font-weight:600;font-size:12px;letter-spacing:.01em}
+@media(hover:hover){.stat:hover{transform:translateY(-3px);border-color:#4b82bc}}
+.cards,.dashboard-debts{gap:14px}
+button,.toolbar a{border-radius:12px!important;transition:filter .18s,transform .18s,border-color .18s;box-shadow:0 3px 12px #0002}
+button{font-weight:750}button:not(.secondary):not(.danger){background:linear-gradient(135deg,#70baff,#468eff);color:#051728}button.secondary{background:#203c5e;border:1px solid #426184;color:#edf6ff}button.danger{background:#6c2940;color:#ffeaf0}
+@media(hover:hover){button:hover,.toolbar a:hover{filter:brightness(1.12);transform:translateY(-1px)}}button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid #9ad0ff;outline-offset:3px}
+#workspace>.toolbar{align-items:center;margin-bottom:20px;gap:10px}
+#workspace>.toolbar>div:first-child{flex:1 0 100%;padding-bottom:4px}#workspace>.toolbar>a{display:inline-flex!important;align-items:center;justify-content:center;padding:11px 16px!important;min-height:44px;background:#193756!important;color:#e6f3ff!important;border:1px solid #3b628c;text-decoration:none;font-size:13px;font-weight:750;box-shadow:0 3px 14px #0002}
+#workspace>.toolbar>a[href*="izvestaji"],#workspace>.toolbar>a[href*="finansijski"]{border-color:#327e82;background:#153b4a!important}
+#workspace>.toolbar>a[href*="pravdanje"],#workspace>.toolbar>a[href*="honorari"]{border-color:#9c7748;background:#48371f!important}
+#signOut{margin-left:auto}
+.nav{position:sticky;top:0;z-index:5;gap:7px;padding:9px 0 14px;margin:6px 0 17px;background:linear-gradient(#091a2c 78%,transparent);overflow-x:auto;scrollbar-width:thin}
+.nav button{white-space:nowrap;border-radius:12px;padding:11px 16px;background:#17314f!important;color:#c9dcf2!important;border:1px solid #345477;box-shadow:none}
+.nav button.active{background:linear-gradient(135deg,#71bbff,#4d96f9)!important;color:#06192e!important;border-color:transparent;box-shadow:0 6px 20px #287fd944}
+input,select,textarea{border-radius:12px;background:#0a1b2e;border:1px solid #345371;color:#f6f9ff;transition:border-color .2s,box-shadow .2s}
+input:focus,select:focus,textarea:focus{border-color:#71b7ff;box-shadow:0 0 0 3px #4699ff21;outline:none}
+label{font-weight:650;color:#c5d6ea}
+.tablewrap{border-radius:15px;border:1px solid #2d4664;background:#0b1d32;scrollbar-width:thin}
+table{border-collapse:separate;border-spacing:0}
+th{position:relative;background:#18324f;color:#c8d9ed;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.06em}
+td{background:#10243b;color:#e5edf9}tbody tr:nth-child(even) td{background:#122a44}
+tbody tr:hover td{background:#1c3857}td,th{padding:14px 12px;border-bottom:1px solid #2b4662}
+td button{font-size:12px;border-radius:9px!important}
+.status{border-radius:13px;padding:14px;background:#163a58;border-color:#366d99}
+dialog{background:linear-gradient(145deg,#162f4d,#0c1c31);border:1px solid #52789f;border-radius:22px;box-shadow:0 30px 90px #0009}
+dialog::backdrop{background:#020b17c9;backdrop-filter:blur(4px)}
+.login{margin-top:42px;border-radius:24px;padding:30px}.login h1{font-size:28px}
+.progress-track{background:#243e59;height:9px}.progress-fill{background:linear-gradient(90deg,#2fa5c5,#4be0ad)}
+.pwa-tools{background:#17304c}.foot{opacity:.8}
+@media(max-width:800px){
+ .shell{padding:16px 12px 72px}body>header{padding:12px 14px}
+ .brand{font-size:15px;gap:9px}.brand::before{width:43px;height:43px}.brand small{font-size:9px}
+ #workspace>.toolbar{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+ #workspace>.toolbar>div:first-child{grid-column:1/-1}
+ #workspace>.toolbar>a{font-size:12px;padding:11px 9px!important;line-height:1.25;text-align:center;min-width:0}
+ #signOut{margin:0;grid-column:1/-1}
+ .panel{padding:16px;border-radius:18px}.stat{padding:15px;min-height:94px}.stat b{font-size:clamp(18px,4.9vw,25px)}
+ .nav{top:0;gap:7px;margin:8px -12px 14px;padding:9px 12px 13px}.nav button{padding:10px 12px;font-size:12px}
+}
+@media(max-width:420px){.brand{font-size:13px}.brand::before{width:39px;height:39px}.cards{gap:8px}.stat{padding:12px}.stat span{font-size:11px}.login{padding:19px}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{transition:none!important;scroll-behavior:auto!important}}
+@media print{body{background:white!important;color:#111!important}.nav,.pwa-tools{display:none!important}.panel,.stat,.detail{box-shadow:none!important}}
