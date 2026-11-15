@@ -11,6 +11,15 @@ header{padding:18px max(15px,calc((100vw - 1100px)/2));display:flex;align-items:
 .cards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}.card{background:#1a3958;border-radius:10px;padding:15px}.card b{display:block;font-size:clamp(18px,2.1vw,26px);overflow-wrap:anywhere}.card span{font-size:12px;color:var(--muted)}.scroll{overflow:auto}table{border-collapse:collapse;width:100%;min-width:840px}th,td{padding:10px 9px;text-align:left;border-bottom:1px solid #385474;font-size:12px;vertical-align:top}th{white-space:nowrap}.num{text-align:right;white-space:nowrap}.in{color:var(--green)}.out{color:var(--red)}.error{color:#ffb2c0}#status{white-space:pre-wrap}.notice{border:1px solid #627f9d;border-radius:8px;padding:11px;margin-top:14px}.report-head{display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;align-items:center}
 @media(max-width:750px){.grid{grid-template-columns:1fr}.wide,.two{grid-column:auto}.cards{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @page{size:A4 landscape;margin:12mm}@media print{:root{color-scheme:light}body{color:black;background:white;font:11px Arial}header,.noprint{display:none!important}main{max-width:none;padding:0}.panel{background:white;border:0;padding:0;margin:9px 0}.cards{grid-template-columns:repeat(4,1fr)}.card{background:white;color:black;border:1px solid #888;border-radius:0}.card span,.muted{color:#333}table{min-width:0}td,th{color:black;font-size:9px;padding:5px 4px;border-color:#999}.scroll{overflow:visible}.in,.out{color:black}h1{font-size:19px}h2{font-size:15px}}
+
+/* NLB approval queue */
+.nlb-review-item{margin:12px 0;padding:15px;border:1px solid #345675;border-radius:13px;background:#0b2138}
+.nlb-review-item strong{display:block;font-size:15px;margin-bottom:7px}.nlb-review-item .muted{line-height:1.5}
+.nlb-review-item .nlb-actions{display:flex;flex-wrap:wrap;gap:8px;align-items:end;margin-top:11px}
+.nlb-review-item .nlb-actions select{flex:1;min-width:180px}
+.nlb-review-item .nlb-actions button{flex:none}
+.nlb-review-item small{display:block;margin-top:6px;color:#b7cde3}
+
 </style>
 
 <link rel="manifest" href="./manifest.webmanifest">
@@ -26,6 +35,7 @@ header{padding:18px max(15px,calc((100vw - 1100px)/2));display:flex;align-items:
 <p class="muted">Evidencija kretanja novca po bankovnom računu. Povezivanje sa postojećim prihodima i rashodima ne stvara nova knjiženja u Finansijama.</p>
 <div id="status" class="panel">Proveravam prijavu i učitavam podatke...</div>
 <section id="app" hidden>
+<section class="panel noprint" id="nlbReview"><div class="report-head"><div><h2>📥 NLB izvodi – čekaju odobrenje</h2><p class="muted small">Stavke iz mejla su samo pripremljene. Ništa se ne knjiži dok ne pritisneš „Odobri“. Pre odobrenja uporedi sa originalnim PDF izvodom.</p></div><button type="button" class="secondary" id="nlbRefresh">Osveži</button></div><div id="nlbQueueInfo" class="muted">Učitavam stavke...</div><div id="nlbQueue"></div></section>
 <section class="panel noprint"><h2>Nova bankovna stavka</h2>
 <form id="entry" class="grid">
 <label class="field">Datum transakcije<input name="datum" type="date" required></label>
@@ -77,6 +87,53 @@ $('#entry').addEventListener('submit',async e=>{e.preventDefault();if(isSaving)r
 document.addEventListener('click',async e=>{const btn=e.target.closest('[data-delete]');if(!btn)return;const id=Number(btn.dataset.delete);if(!confirm('Obrisati samo ovu bankovnu stavku? Povezani prihodi/rashodi u Finansijama ostaju sačuvani.'))return;btn.disabled=true;try{const {data,error}=await db.from('banka_stavke').delete().eq('id',id).select('id');if(error)throw error;if(!data?.length)throw Error('Brisanje nije potvrđeno.');await refresh();msg('Bankovna stavka je obrisana; Finansije i Blagajna nisu menjane.')}catch(err){msg('Brisanje nije uspelo: '+err.message,true)}finally{btn.disabled=false}});
 $('#apply').onclick=show;$('#month').onclick=()=>{thisMonth();show()};$('#all').onclick=()=>{$('#from').value='';$('#to').value='';show()};$('#print').onclick=()=>{if(show())window.print()};
 $('#csv').onclick=()=>{if(!show())return;const quote=v=>' '+String(v??'').replace(/"/g,'""')+'"';const lines=[['OKK Novi Pazar – Banka i izvodi'],['Od',totals.from,'Do',totals.to],['Početno stanje',totals.opening.toFixed(2)],['Datum','Izvod','Vrsta','Opis','Druga strana','Finansije ID','Priliv','Odliv','Saldo']];let saldo=totals.opening;for(const x of visible){saldo+=x.delta;lines.push([String(x.datum).slice(0,10),x.broj_izvoda||'',labels[x.vrsta]||x.vrsta,x.opis,x.druga_strana||'',x.finansije_id||'',x.delta>0?x.delta.toFixed(2):'',x.delta<0?(-x.delta).toFixed(2):'',saldo.toFixed(2)])}lines.push(['UKUPNO','','','','','',totals.ins.toFixed(2),totals.outs.toFixed(2),totals.balance.toFixed(2)]);const csv='\ufeff'+lines.map(a=>a.map(v=>'"'+String(v??'').replace(/"/g,'""')+'"').join(';')).join('\r\n');const file=new Blob([csv],{type:'text/csv;charset=utf-8'}),url=URL.createObjectURL(file),anchor=document.createElement('a');anchor.href=url;anchor.download='OKK_Banka_'+(totals.from||'sve')+'_'+(totals.to||'sve')+'.csv';document.body.appendChild(anchor);anchor.click();anchor.remove();setTimeout(()=>URL.revokeObjectURL(url),3000)};
-(async()=>{try{const {data:{user},error}=await db.auth.getUser();if(error||!user){msg('Potrebna je prijava. Prijavi se na glavnoj kontrolnoj tabli, pa ponovo otvori ovu stranicu.');return}await refresh();$('#entry [name=datum]').value=localDate(new Date());thisMonth();show();$('#app').hidden=false;$('#status').hidden=true}catch(err){msg('Nije moguće učitati bankovnu evidenciju: '+err.message,true)}})();
+
+let nlbWaiting=[];
+async function loadNlbQueue(){
+ const target=$('#nlbQueue'),info=$('#nlbQueueInfo');
+ const {data,error}=await db.from('nlb_uvoz_na_proveri').select('*').eq('status','ceka').order('datum',{ascending:false}).order('id',{ascending:true}).limit(250);
+ if(error){info.textContent='Uvoz nije dostupan: '+error.message;target.innerHTML='';return}
+ nlbWaiting=data||[];
+ info.textContent=nlbWaiting.length?'Za proveru: '+nlbWaiting.length+' stavki.': 'Nema novih stavki koje čekaju odobrenje.';
+ const linked=new Set([...bank,...cash].map(x=>Number(x.finansije_id)).filter(Boolean));
+ target.innerHTML=nlbWaiting.map(x=>{
+  const related=finances.filter(f=>f.vrsta===(x.vrsta==='priliv'?'prihod':'rashod') && Math.abs(Number(f.iznos)-Number(x.iznos))<.005 && !linked.has(Number(f.id)));
+  const options='<option value="">Samo banka (bez veze sa Finansijama)</option>'+related.map(f=>'<option value="'+f.id+'">Finansije #'+f.id+' · '+esc(f.datum)+' · '+esc(f.opis)+'</option>').join('');
+  const known=bank.some(b=>String(b.datum).slice(0,10)===String(x.datum).slice(0,10) && b.vrsta===x.vrsta && Math.abs(Number(b.iznos)-Number(x.iznos))<.005 && (
+   String(b.druga_strana||'').trim().toLocaleLowerCase('sr')===String(x.druga_strana||'').trim().toLocaleLowerCase('sr')
+   || (b.broj_izvoda===x.broj_izvoda && String(b.opis||'').trim().toLocaleLowerCase('sr')===String(x.opis||'').trim().toLocaleLowerCase('sr'))
+  ));
+  return '<div class="nlb-review-item" data-nlb-id="'+x.id+'"><strong>'+esc(x.vrsta==='priliv'?'🟢 PRILIV':'🔴 ODLIV')+' · '+money(x.iznos)+'</strong><div>'+esc(x.datum)+' · Izvod '+esc(x.broj_izvoda)+' · Nalog '+esc(x.redni_broj)+'</div><div>'+esc(x.druga_strana||'—')+'</div><div class="muted">'+esc(x.opis)+'</div><small>Gmail: '+esc(x.naziv_fajla||'')+(known?' · ⚠ Mogući postojeći duplikat':'')+'</small><div class="nlb-actions"><select data-nlb-fin="'+x.id+'" aria-label="Povezana finansijska stavka">'+options+'</select><button type="button" data-nlb-approve="'+x.id+'">Odobri</button><button type="button" class="secondary" data-nlb-reject="'+x.id+'">Odbij</button></div></div>';
+ }).join('');
+}
+$('#nlbRefresh').addEventListener('click',loadNlbQueue);
+document.addEventListener('click',async e=>{
+ const approve=e.target.closest('[data-nlb-approve]'),reject=e.target.closest('[data-nlb-reject]');
+ if(!approve&&!reject)return;
+ const id=Number((approve||reject).dataset[approve?'nlbApprove':'nlbReject']);
+ const item=nlbWaiting.find(x=>Number(x.id)===id);if(!item)return;
+ const button=approve||reject;
+ if(approve){
+  const select=document.querySelector('[data-nlb-fin="'+id+'"]');
+  const financeId=select?.value?Number(select.value):null;
+  if(!confirm('Potvrdi knjiženje u bankovnu evidenciju: '+item.vrsta+' '+money(item.iznos)+' ('+item.druga_strana+').'+(financeId?' Povezati sa Finansijama #'+financeId+'.':' Neće biti kreiran novi prihod/rashod.')+' Proverio sam originalni izvod.'))return;
+  button.disabled=true;
+  try{
+   const {error}=await db.rpc('nlb_odobri_stavku',{p_id:id,p_finansije_id:financeId});
+   if(error)throw error;
+   await refresh();await loadNlbQueue();msg('NLB stavka je odobrena i upisana u banku.');
+  }catch(err){msg('Nije proknjiženo: '+err.message,true)}finally{button.disabled=false}
+ }else{
+  if(!confirm('Odbiti ovaj predlog bankovne transakcije? Podaci se neće knjižiti.'))return;
+  button.disabled=true;
+  try{
+   const {data,error}=await db.from('nlb_uvoz_na_proveri').update({status:'odbijeno',obradjeno:new Date().toISOString()}).eq('id',id).eq('status','ceka').select('id');
+   if(error||!data?.length)throw Error(error?.message||'Odbijanje nije potvrđeno.');
+   await loadNlbQueue();msg('Predlog je odbijen. Bankovna evidencija nije menjana.');
+  }catch(err){msg('Greška: '+err.message,true)}finally{button.disabled=false}
+ }
+});
+
+(async()=>{try{const {data:{user},error}=await db.auth.getUser();if(error||!user){msg('Potrebna je prijava. Prijavi se na glavnoj kontrolnoj tabli, pa ponovo otvori ovu stranicu.');return}await refresh();await loadNlbQueue();$('#entry [name=datum]').value=localDate(new Date());thisMonth();show();$('#app').hidden=false;$('#status').hidden=true}catch(err){msg('Nije moguće učitati bankovnu evidenciju: '+err.message,true)}})();
 </script>
 </body></html>
