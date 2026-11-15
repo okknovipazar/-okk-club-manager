@@ -51,3 +51,23 @@ dialog::backdrop{background:#020b17c9;backdrop-filter:blur(4px)}
 @media(max-width:420px){.brand{font-size:13px}.brand::before{width:39px;height:39px}.cards{gap:8px}.stat{padding:12px}.stat span{font-size:11px}.login{padding:19px}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{transition:none!important;scroll-behavior:auto!important}}
 @media print{body{background:white!important;color:#111!important}.nav,.pwa-tools{display:none!important}.panel,.stat,.detail{box-shadow:none!important}}
+
+/* Mobile refinements after checking the installed app screenshot */
+body>header{min-width:0;gap:8px 14px}
+body>header .brand{flex:1 1 auto;min-width:0}
+body>header #account{min-width:0;max-width:100%;overflow-wrap:anywhere;font-size:12px;color:#b9cbe0}
+@media(max-width:800px){
+ body>header{display:grid;grid-template-columns:minmax(0,1fr);padding:12px 16px;gap:7px}
+ body>header .brand{display:grid;grid-template-columns:48px minmax(0,1fr);grid-template-rows:auto auto;column-gap:11px;font-size:16px;line-height:1.1;align-items:center}
+ body>header .brand::before{grid-row:1/3;grid-column:1;width:46px;height:46px}
+ body>header .brand small{grid-column:2;grid-row:2;font-size:9px;line-height:1.25;letter-spacing:.055em;margin-top:2px}
+ body>header #account{font-size:11px;padding-left:59px;line-height:1.4;opacity:.84}
+ #workspace>.toolbar{display:flex;flex-wrap:nowrap;align-items:stretch;overflow-x:auto;overscroll-behavior-x:contain;scroll-snap-type:x proximity;scrollbar-width:thin;gap:8px;margin:0 -12px 13px;padding:0 12px 10px}
+ #workspace>.toolbar>div:first-child{flex:0 0 100%;scroll-snap-align:start;align-self:center;padding:0 0 3px}
+ #workspace>.toolbar>div:first-child h1{font-size:26px}
+ #workspace>.toolbar>div:first-child .muted{font-size:12px}
+ #workspace>.toolbar>a{flex:0 0 158px;min-height:52px;scroll-snap-align:center;font-size:12px;padding:9px 11px!important;white-space:normal}
+ #workspace>.toolbar>#signOut{flex:0 0 128px;min-height:52px;scroll-snap-align:end;margin:0}
+ .nav{position:relative;padding-top:6px}
+}
+@media(max-width:420px){body>header .brand{font-size:15px}}
