@@ -25,7 +25,7 @@ async function show(area){
  else if(area==='dugovanja')$('#result').innerHTML='<h2>Pregled dugovanja</h2><div class="grid">'+stat('Ukupna dugovanja',money(data.ukupno_dugovanje))+stat('Isplaćeno',money(data.isplaceno))+stat('Preostalo',money(Number(data.ukupno_dugovanje)-Number(data.isplaceno)))+'</div>';
  else if(area==='banka')$('#result').innerHTML='<h2>Bankarski pregled</h2><div class="grid">'+stat('Prilivi',money(data.prilivi))+stat('Odlivi',money(data.odlivi))+stat('Broj stavki',data.broj_stavki)+'</div>';
 }
-const inviteFlow=location.hash.includes('type=invite')||location.search.includes('type=invite');
+const inviteFlow=location.hash.includes('type=invite')||location.hash.includes('type=recovery')||location.search.includes('type=invite')||location.search.includes('type=recovery');
 let passwordConfigured=!inviteFlow;
 async function start(){
  const {data:{user}}=await db.auth.getUser();
